@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "GM PROJECT";
+}
+
+<style>
+    .home-container {
+        text-align: center;
+    }
+
+        .home-container > .row {
+            display: flex;
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            flex-direction: column; /* Organiza os elementos em uma coluna */
+        }
+
+    .loader {
+        width: 60px;
+        aspect-ratio: 4;
+        --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+        background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+        background-size: calc(100% / 3) 100%;
+        animation: l7 1s infinite linear;
+        filter: blur(3px);
+    }
+
+    /*Case aplique diretamente na View: O erro 'keyframes' does not exist in the current context' está a ocorrer porque o Razor está interpretando erroneamente -> acrescentar @@*/
+    @@keyframes l7 {
+        33% {
+            background-size: calc(100% / 3) 0%, calc(100% / 3) 100%, calc(100% / 3) 100%;
+        }
+
+        50% {
+            background-size: calc(100% / 3) 100%, calc(100% / 3) 0%, calc(100% / 3) 100%;
+        }
+
+        66% {
+            background-size: calc(100% / 3) 100%, calc(100% / 3) 100%, calc(100% / 3) 0%;
+        }
+    }
+</style>
+
+<section class="home-container" aria-labelledby="aspnetTitle">
+
+    <div class="row">
+        <h1>@ViewBag.Title</h1>
+        <p>The project is under development. Thank you for your understanding.</p>
+        <p>More news soon!</p>
+        <br />
+        <span class="loader"></span>
+    </div>
+
+    @*<div class="row">
+            <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+                <h2 id="gettingStartedTitle">Getting started</h2>
+                <p>
+                    ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                    enables a clean separation of concerns and gives you full control over markup
+                    for enjoyable, agile development.
+                </p>
+                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            </section>
+            <section class="col-md-4" aria-labelledby="librariesTitle">
+                <h2 id="librariesTitle">Get more libraries</h2>
+                <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            </section>
+            <section class="col-md-4" aria-labelledby="hostingTitle">
+                <h2 id="hostingTitle">Web Hosting</h2>
+                <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            </section>
+        </div>*@
+</section>

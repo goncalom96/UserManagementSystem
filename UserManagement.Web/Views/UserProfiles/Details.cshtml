@@ -1,0 +1,41 @@
+﻿@model UserManagement.DAL.Models.Users.UserProfile
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<section class="" aria-labelledby="aspnetTitle">
+    <div class="row center-container">
+        <h2>@ViewBag.Title</h2>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <table class="table">
+
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.FirstName)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.LastName)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Gender)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.DateOfBirth)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.ProfilePictureUrl)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.FirstName</td>
+                    <td>@Model.LastName</td>
+                    <td>@Model.Gender</td>
+                    <td>@Model.DateOfBirth</td>
+                    <td>@(string.IsNullOrEmpty(Model.ProfilePictureUrl) ? "NULL" : Model.ProfilePictureUrl)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="text-align:center; padding-top: 20px;">
+            <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
+        </div>
+    </div>
+</section>

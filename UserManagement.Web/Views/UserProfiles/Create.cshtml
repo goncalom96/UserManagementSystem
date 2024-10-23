@@ -1,0 +1,98 @@
+﻿@model UserManagement.DAL.Models.Users.UserProfile
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<style>
+    .create-userprofile {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .create-userprofile * {
+            width: 300px;
+        }
+
+        .create-userprofile h1 {
+            text-align: center;
+        }
+
+        .create-userprofile form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .create-userprofile input {
+            background-color: rgba(240, 240, 240, 0.9);
+        }
+</style>
+
+<section class="create-userprofile">
+
+    <div class="row">
+        <h1 class="text-uppercase">@ViewBag.Title</h1>
+    </div>
+
+    <br />
+
+    <div>
+        @using (Html.BeginForm("Create", "UserProfiles", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(m => m.UserLoginId)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.DateOfBirth, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Gender, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EnumDropDownListFor(m => m.Gender, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ProfilePictureUrl, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input type="file" name="file" />
+                    @Html.ValidationMessageFor(m => m.ProfilePictureUrl, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success fw-bold text-uppercase">Sign up</button>
+            </div>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger small" })
+
+        }
+    </div>
+</section>

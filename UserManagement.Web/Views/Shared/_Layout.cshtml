@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM PROJECT</title>
+    <link rel="icon" type="image/png" href="~/Assets/Images/icon.png" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+            <div class="container">
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+
+                    <div class="navbar-nav" style="gap:5px">
+                        <img src="~/Assets/Images/code.png" height="40" width="40" alt="GM Icon" />
+                        <a href="@Url.Action("Index", "Home")" class="navbar-brand">GM</a>
+                    </div>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Dashboard <span class="caret"></span>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="@Url.Action("UsersManagement", "UserLogins")">Users</a>
+                                        <a class="dropdown-item" href="@Url.Action("RolesManagement", "UserRoles")">Roles</a>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+
+                        <ul class="navbar-nav navbar-right">
+                            <li class="nav-link" style="color:white">@User.Identity.Name</li>
+                            <li>
+                                <a href="@Url.Action("Details", "UserProfiles")" class="nav-link">
+                                    <i class="fa fa-user-circle-o" aria-hidden="true" title="Profile"></i>
+                                </a>
+                            </li>
+
+                            @using (Html.BeginForm("Logout", "UserLogins", FormMethod.Post, new { id = "logOut" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <li>
+                                    <a class="nav-link" href="javascript:document.getElementById('logOut').submit()">Log Out</a>
+                                </li>
+                                @*<li>@Html.ActionLink("Log Out", "Logout", "UserLogins", new { area = "" }, new { @class = "nav-link" })</li> // Teria de ser HttpGet*@
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="@Url.Action("Login", "UserLogins")" class="nav-link">
+                                    <i class="fa fa-sign-in" aria-hidden="true" title="Log in"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container body-content">
+        @RenderBody()
+    </main>
+
+    <footer class="container body-content">
+        <p>&copy; Copyright @DateTime.Now.Year - Gonçalo Marques</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    @*@Scripts.Render("~/bundles/jquery")*@
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

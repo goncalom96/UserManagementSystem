@@ -1,0 +1,50 @@
+﻿@model IQueryable<UserManagement.DAL.Models.Users.UserLogin>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<section class="" aria-labelledby="aspnetTitle">
+
+    <div class="row center-container">
+        <h2>@ViewBag.Title</h2>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <table class="table table-striped">
+
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserLoginId)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserName)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserRole.RoleType)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().Email)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().Password)</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr class="table-active">
+                        <th scope="row">@user.UserLoginId</th>
+                        <td>@user.UserName</td>
+                        <td>@user.UserRole.RoleType</td>
+                        <td>@user.Email</td>
+                        <td>@user.Password</td>
+                        <td>
+                            <button class="btn btn-success" type="button">@Html.ActionLink("Edit", "Edit", "UserLogins", new { id = user.UserLoginId }, new { @class = "nav-link" })</button>
+                            <button class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserLogins", new { id = user.UserLoginId }, new { @class = "nav-link" })</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div style="text-align:center; padding-top: 20px;">
+            <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
+        </div>
+    </div>
+</section>
