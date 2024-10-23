@@ -26,7 +26,6 @@ namespace UserManagement.Web.Controllers
             return View(userProfile);
         }
 
-        //[Authorize(Roles = "Administrator, Guest")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

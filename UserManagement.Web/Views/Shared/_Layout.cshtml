@@ -16,7 +16,7 @@
 
                     <div class="navbar-nav" style="gap:5px">
                         <img src="~/Assets/Images/code.png" height="40" width="40" alt="GM Icon" />
-                        <a href="@Url.Action("Index", "Home")" class="navbar-brand">GM</a>
+                        <a href="#" class="navbar-brand">GM</a>
                     </div>
 
                     @if (User.Identity.IsAuthenticated)
@@ -24,6 +24,12 @@
                         <ul class="navbar-nav flex-grow-1">
                             @if (User.IsInRole("Administrator"))
                             {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Sobre", "Home")" class="nav-link">Sobre</a>
+                                </li>
                                 <li class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Dashboard <span class="caret"></span>
@@ -37,27 +43,34 @@
                         </ul>
 
                         <ul class="navbar-nav navbar-right">
-                            <li class="nav-link" style="color:white">@User.Identity.Name</li>
-                            <li>
+                            <li class="navbar-text" style="color:white">@User.Identity.Name</li>
+                            <li class="nav-item">
                                 <a href="@Url.Action("Details", "UserProfiles")" class="nav-link">
                                     <i class="fa fa-user-circle-o" aria-hidden="true" title="Profile"></i>
                                 </a>
                             </li>
-
                             @using (Html.BeginForm("Logout", "UserLogins", FormMethod.Post, new { id = "logOut" }))
                             {
                                 @Html.AntiForgeryToken()
-                                <li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="javascript:document.getElementById('logOut').submit()">Log Out</a>
                                 </li>
-                                @*<li>@Html.ActionLink("Log Out", "Logout", "UserLogins", new { area = "" }, new { @class = "nav-link" })</li> // Teria de ser HttpGet*@
                             }
                         </ul>
                     }
                     else
                     {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("Sobre", "Home")" class="nav-link">Sobre</a>
+                            </li>
+                        </ul>
+
                         <ul class="nav navbar-nav navbar-right">
-                            <li>
+                            <li class="nav-item">
                                 <a href="@Url.Action("Login", "UserLogins")" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true" title="Log in"></i>
                                 </a>

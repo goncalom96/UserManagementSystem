@@ -2,9 +2,9 @@
 
 namespace UserManagement.Web.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
-        [Authorize]
         public ActionResult Index()
         {
             return View();

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
@@ -40,9 +38,19 @@ namespace UserManagement.Web
 
                     // Atribuir ao contexto atual
                     HttpContext.Current.User = userPrincipal;
+
+                    // Verifica se existe um ReturnUrl na query string
+                    var returnUrl = Request.QueryString["ReturnUrl"];
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        // Aqui você pode redirecionar para a página unauthorized se o usuário não tiver permissão
+                        if (!userPrincipal.IsInRole("Administrator")) // Verifica se não é um administrador
+                        {
+                            Response.Redirect("~/unauthorized.aspx");
+                        }
+                    }
                 }
             }
         }
-
     }
 }

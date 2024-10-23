@@ -76,7 +76,6 @@ namespace UserManagement.Web.Controllers
 
                         // Adiciona o cookie à resposta HTTP
                         HttpContext.Response.Cookies.Add(authCookie);
-
                         #region Outras opções
 
                         // Opção 2 (sem role) - Configura o cookie de autenticação
@@ -89,8 +88,15 @@ namespace UserManagement.Web.Controllers
 
                         #endregion Outras opções
 
-                        // Redireciona para o returnUrl se for local (página selecionada), caso contrário, redireciona para a página inicial (default)
-                        return Url.IsLocalUrl(returnUrl) ? Redirect(returnUrl) : (ActionResult)RedirectToAction("Index", "Home");
+                        // Redireciona para o returnUrl se for local (página selecionada) caso contrário, redireciona para a página inicial (default)
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                     else
                     {
