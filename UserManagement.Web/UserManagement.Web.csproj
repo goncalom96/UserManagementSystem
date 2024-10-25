@@ -127,9 +127,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ErrorHandlerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserLoginsController.cs" />
     <Compile Include="Controllers\UserProfilesController.cs" />
+    <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -199,12 +201,17 @@
     <Content Include="Views\UserLogins\Login.cshtml" />
     <Content Include="Views\UserLogins\Register.cshtml" />
     <Content Include="Views\UserLogins\ChangePassword.cshtml" />
-    <Content Include="Views\UserLogins\UsersManagement.cshtml" />
     <Content Include="Views\UserProfiles\Create.cshtml" />
     <Content Include="Views\UserProfiles\Details.cshtml" />
+    <Content Include="Views\Shared\_Authenticated.cshtml" />
+    <Content Include="Views\Shared\_Anonymous.cshtml" />
+    <Content Include="Views\UserRoles\ManageRoles.cshtml" />
+    <Content Include="Views\UserLogins\ManageUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Admin\" />
+    <Folder Include="Views\ErrorHandler\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

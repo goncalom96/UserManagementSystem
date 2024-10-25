@@ -1,0 +1,43 @@
+﻿<ul class="navbar-nav flex-grow-1">
+    @if (User.IsInRole("Administrator"))
+    {
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dashboard <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="@Url.Action("ManageUsers", "UserLogins")">Users</a>
+                <a class="dropdown-item" href="@Url.Action("ManageRoles", "UserRoles")">Roles</a>
+            </div>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("About", "Home")" class="nav-link">About</a>
+        </li>
+    }
+</ul>
+
+<ul class="navbar-nav navbar-right">
+    <li class="navbar-text" style="color:white">
+        @User.Identity.Name
+    </li>
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user-circle-o" aria-hidden="true" title="@User.Identity.Name"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="@Url.Action("Details", "UserLogins")">Account</a>
+            <a class="dropdown-item" href="@Url.Action("Details", "UserProfiles")">Profile</a>
+            @using (Html.BeginForm("Logout", "UserLogins", FormMethod.Post, new { id = "logOut" }))
+            {
+                @Html.AntiForgeryToken()
+                <a class="dropdown-item" href="javascript:document.getElementById('logOut').submit()">Log Out</a>
+            }
+        </div>
+    </li>
+</ul>

@@ -2,12 +2,35 @@
     ViewBag.Title = "Error";
 }
 
-<section class="" aria-labelledby="aspnetTitle">
+<style>
+    .error-container {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .alert-text {
+        color: brown;
+        font-size: large;
+    }
+</style>
+
+<section class="error-container" aria-labelledby="aspnetTitle">
     <h1>@ViewBag.Title</h1>
     <h2>An error occurred while processing your request.</h2>
+    <br />
 
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
+    <div class="alert-text">
+        @if (@TempData["ErrorMessage"] != null)
+        {
+            <p>@ViewBag.ErrorTitle</p>
+            <p>@TempData["ErrorMessage"]</p>
+        }
     </div>
 
+    <div style="padding-top: 50px;">
+        <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
+    </div>
 </section>

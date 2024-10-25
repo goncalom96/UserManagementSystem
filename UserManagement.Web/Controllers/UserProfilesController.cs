@@ -15,7 +15,6 @@ namespace UserManagement.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult Create(int userLoginId)
         {
             // Cria um novo UserProfile e associa o UserLoginId
@@ -27,7 +26,6 @@ namespace UserManagement.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Create(UserProfile userProfile)
         {

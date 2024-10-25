@@ -1,13 +1,34 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 namespace UserManagement.Web.Controllers
 {
-    [AllowAnonymous]
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Failed to access the Home Page: {ex.Message}";
+                return View("Error");
+            }
+        }
+
+        public ActionResult About()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Failed to access the About Page: {ex.Message}";
+                return View("Error");
+            }
         }
     }
 }

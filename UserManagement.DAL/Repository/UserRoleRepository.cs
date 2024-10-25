@@ -16,7 +16,15 @@ namespace UserManagement.DAL.Repository
             this.context = context;
         }
 
-        public UserRole GetRoles(Expression<Func<UserRole, bool>> predicate)
+        public IQueryable<UserRole> GetRoles()
+        {
+            IQueryable<UserRole> roles = context.UserRoles;
+
+            return roles != null ? roles : null;
+
+        }
+
+        public UserRole GetRole(Expression<Func<UserRole, bool>> predicate)
         {
             return context.UserRoles.SingleOrDefault(predicate);
         }

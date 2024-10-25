@@ -8,8 +8,9 @@ namespace UserManagement.DAL.Repository.Interfaces
 {
     public interface IUserRoleRepository
     {
-        //IEnumerable<EnumRole> GetRoles(Expression<Func<UserLogin, bool>> predicate);
 
-        UserRole GetRoles(Expression<Func<UserRole, bool>> predicate);
+        IQueryable<UserRole> GetRoles();
+
+        UserRole GetRole(Expression<Func<UserRole, bool>> predicate);
     }
 }

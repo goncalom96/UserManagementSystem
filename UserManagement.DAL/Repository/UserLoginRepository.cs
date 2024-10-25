@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Linq.Expressions;
 using UserManagement.DAL.Data;
@@ -52,10 +51,9 @@ namespace UserManagement.DAL.Repository
         {
             // NOTA: Usar o Include só quando se tem a certeza que se vai utilizar as outras entidades na view para melhorar o desempenho
 
-            // Opção 1
-            IQueryable<UserLogin> users =
-            (from u in context.UserLogins
-             select u).Include(u => u.UserProfile).Include(u => u.UserRole);
+            IQueryable<UserLogin> users = context.UserLogins
+                .Include(u => u.UserProfile)
+                .Include(u => u.UserRole);
 
             return users != null ? users : null;
 
@@ -65,8 +63,10 @@ namespace UserManagement.DAL.Repository
             // Referenciar "using System.Data.Entity;"
             //using (WebAppContext context = new WebAppContext())
             //{
-            //    IQueryable<UserLogin> users = context.UserLogins.Include(u => u.UserProfile).Include(u => u.UserRole);
-            //    return users;
+            //    IQueryable<UserLogin> users =
+            //    (from u in context.UserLogins select u)
+            //    .Include(u => u.UserProfile)
+            //    .Include(u => u.UserRole);
             //}
 
             // Opção 3

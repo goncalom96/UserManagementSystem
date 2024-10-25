@@ -18,7 +18,18 @@ namespace UserManagement.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-        protected void Application_AuthenticateRequest(object sender, EventArgs e)
+        protected void Application_Error()
+        {
+            Exception exception = Server.GetLastError();
+            Server.ClearError();
+
+            var httpException = exception as HttpException;
+            int code = httpException?.GetHttpCode() ?? 500; // Se não for HttpException, trata como erro 500
+
+            Response.Redirect(url: $"/ErrorHandler/Index?code={code}");
+        }
+
+        protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
         {
             // Ler o cookie de autenticação FormsAuthentication
             HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -38,17 +49,6 @@ namespace UserManagement.Web
 
                     // Atribuir ao contexto atual
                     HttpContext.Current.User = userPrincipal;
-
-                    // Verifica se existe um ReturnUrl na query string
-                    var returnUrl = Request.QueryString["ReturnUrl"];
-                    if (!string.IsNullOrEmpty(returnUrl))
-                    {
-                        // Aqui você pode redirecionar para a página unauthorized se o usuário não tiver permissão
-                        if (!userPrincipal.IsInRole("Administrator")) // Verifica se não é um administrador
-                        {
-                            Response.Redirect("~/unauthorized.aspx");
-                        }
-                    }
                 }
             }
         }

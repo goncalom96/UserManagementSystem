@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.UI;
 using UserManagement.DAL.Models.Users;
 using UserManagement.DAL.Repository;
 using UserManagement.Web.Models;
@@ -30,7 +31,6 @@ namespace UserManagement.Web.Controllers
         //}
 
         [HttpGet]
-        [AllowAnonymous] // Torna público
         public ActionResult Login(string returnUrl)
         {
             // Recebe a Url para onde o USER pretende acessar (Home, perfil...)  e só é redirecionado para ela quando o login for bem sucedido
@@ -40,7 +40,6 @@ namespace UserManagement.Web.Controllers
 
         // POST envia dados para o servidor para serem processados, geralmente do corpo da requisição.
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken] // Token para proteger contra CSRF
         public ActionResult Login(LoginViewModel login, string returnUrl)
         {
@@ -76,6 +75,7 @@ namespace UserManagement.Web.Controllers
 
                         // Adiciona o cookie à resposta HTTP
                         HttpContext.Response.Cookies.Add(authCookie);
+
                         #region Outras opções
 
                         // Opção 2 (sem role) - Configura o cookie de autenticação
@@ -105,7 +105,7 @@ namespace UserManagement.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = $"Failed to log in: {ex.Message}";
+                    TempData["ErrorMessage"] = $"Failed to Log In: {ex.Message}";
                     return View("Error");
                 }
             }
@@ -115,7 +115,6 @@ namespace UserManagement.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
@@ -137,13 +136,12 @@ namespace UserManagement.Web.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"Failed to log out: {ex.Message}";
+                TempData["ErrorMessage"] = $"Failed to Log Out: {ex.Message}";
                 return View("Error");
             }
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult Register()
         {
             UserLogin userLogin = new UserLogin();
@@ -151,7 +149,6 @@ namespace UserManagement.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Register(UserLogin userLogin)
         {
@@ -182,7 +179,7 @@ namespace UserManagement.Web.Controllers
                         return View(userLogin); // Retorna a View com os dados preenchidos
                     }
 
-                    userLogin.UserRoleId = uow.UserRoleRepository.GetRoles(r => r.RoleType == UserRole.EnumRole.Guest).UserRoleId;
+                    userLogin.UserRoleId = uow.UserRoleRepository.GetRole(r => r.RoleType == UserRole.EnumRole.Guest).UserRoleId;
                     userLogin.CreatedAt = DateTime.Now;
                     userLogin.IsActived = false;
 
@@ -193,7 +190,7 @@ namespace UserManagement.Web.Controllers
                 }
                 catch (Exception ex) // Captura a exceção
                 {
-                    TempData["ErrorMessage"] = $"Registration failed: {ex.Message}";
+                    TempData["ErrorMessage"] = $"User registration failed: {ex.Message}";
                     return View("Error");
                 }
             }
@@ -203,44 +200,50 @@ namespace UserManagement.Web.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult ChangePassword()
         {
             return View();
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(string email)
         {
-            if (string.IsNullOrEmpty(email))
+            try
             {
-                ModelState.AddModelError("", "Please enter your Email.");
-                return View();
+                if (string.IsNullOrEmpty(email))
+                {
+                    ModelState.AddModelError("", "Please enter your Email.");
+                    return View();
+                }
+
+                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email);
+
+                if (userLogin == null)
+                {
+                    ModelState.AddModelError("", "User not found.");
+                    return View();
+                }
+
+                //string resetToken = Guid.NewGuid().ToString();
+                //userLogin.PasswordResetToken = resetToken;
+                //userLogin.ResetTokenExpiration = DateTime.Now.AddHours(1); // Token expira em 1 hora
+                uow.SaveChanges();
+
+                // Aqui envias o email com o link de recuperação
+                TempData["Message"] = "Check your email for the password reset link.";
+                return RedirectToAction("ForgotPasswordConfirmation");
             }
-
-            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email);
-
-            if (userLogin == null)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "User not found.");
-                return View();
+                TempData["ErrorMessage"] = $"Password change failed: {ex.Message}";
+                return View("Error");
             }
-
-            //string resetToken = Guid.NewGuid().ToString();
-            //userLogin.PasswordResetToken = resetToken;
-            //userLogin.ResetTokenExpiration = DateTime.Now.AddHours(1); // Token expira em 1 hora
-            uow.SaveChanges();
-
-            // Aqui envias o email com o link de recuperação
-            TempData["Message"] = "Check your email for the password reset link.";
-            return RedirectToAction("ForgotPasswordConfirmation");
         }
 
-        [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult UsersManagement()
+        [HttpGet]
+        public ActionResult ManageUsers()
         {
             try
             {
