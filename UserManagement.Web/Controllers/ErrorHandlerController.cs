@@ -8,27 +8,34 @@ namespace UserManagement.Web.Controllers
         {
             switch (code)
             {
+                case 401:
                 case 403:
-                    ViewBag.ErrorTitle = "Access denied";
+                    TempData["ErrorTitle"] = "Access denied";
                     TempData["ErrorMessage"] = "Unauthorized page.";
-                    break;
+                    return RedirectToAction("AccessDenied", "ErrorHandler");
 
                 case 404:
-                    ViewBag.ErrorTitle = "Page Not Found";
+                    TempData["ErrorTitle"] = "Page Not Found";
                     TempData["ErrorMessage"] = "The page you are looking for does not exist.";
                     break;
 
                 case 500:
-                    ViewBag.ErrorTitle = "Internal Server Error";
+                    TempData["ErrorTitle"] = "Internal Server Error";
                     TempData["ErrorMessage"] = "An internal server error occurred.";
                     break;
 
                 default:
-                    ViewBag.ErrorTitle = "Unexpected Error";
+                    TempData["ErrorTitle"] = "Unexpected Error";
                     TempData["ErrorMessage"] = "An unexpected error occurred.";
                     break;
             }
+            return View("Error");
+        }
 
+        public ActionResult AccessDenied()
+        {
+            TempData["ErrorTitle"] = "Access denied";
+            TempData["ErrorMessage"] = "Unauthorized page.";
             return View("Error");
         }
     }

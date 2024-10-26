@@ -3,21 +3,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Web.UI;
 using UserManagement.DAL.Models.Users;
 using UserManagement.DAL.Repository;
+using UserManagement.Web.Filters;
 using UserManagement.Web.Models;
 
 namespace UserManagement.Web.Controllers
 {
     public class UserLoginsController : Controller
     {
-        //LOGIN COM FORMS AUTHENTICATION
-
         private readonly UnitOfWork uow;
 
         // Instância direta do UnitOfWork dentro do construtor
-
         public UserLoginsController()
         {
             uow = new UnitOfWork();
@@ -30,18 +27,19 @@ namespace UserManagement.Web.Controllers
         //    this.uow = uow; // Instância direta do UnitOfWork
         //}
 
+        //LOGIN COM FORMS AUTHENTICATION
+
         [HttpGet]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            // Recebe a Url para onde o USER pretende acessar (Home, perfil...)  e só é redirecionado para ela quando o login for bem sucedido
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            LoginViewModel login = new LoginViewModel();
+            return View(login);
         }
 
         // POST envia dados para o servidor para serem processados, geralmente do corpo da requisição.
         [HttpPost]
         [ValidateAntiForgeryToken] // Token para proteger contra CSRF
-        public ActionResult Login(LoginViewModel login, string returnUrl)
+        public ActionResult Login(LoginViewModel login)
         {
             if (ModelState.IsValid)
             {
@@ -88,15 +86,7 @@ namespace UserManagement.Web.Controllers
 
                         #endregion Outras opções
 
-                        // Redireciona para o returnUrl se for local (página selecionada) caso contrário, redireciona para a página inicial (default)
-                        if (Url.IsLocalUrl(returnUrl))
-                        {
-                            return Redirect(returnUrl);
-                        }
-                        else
-                        {
-                            return RedirectToAction("Index", "Home");
-                        }
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -241,8 +231,8 @@ namespace UserManagement.Web.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrator")]
         [HttpGet]
+        [CustomAuthorize(Roles = "Administrator")]
         public ActionResult ManageUsers()
         {
             try

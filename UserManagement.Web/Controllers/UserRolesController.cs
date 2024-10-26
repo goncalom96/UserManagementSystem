@@ -6,9 +6,11 @@ using System.Web;
 using System.Web.Mvc;
 using UserManagement.DAL.Models.Users;
 using UserManagement.DAL.Repository;
+using UserManagement.Web.Filters;
 
 namespace UserManagement.Web.Controllers
 {
+    [CustomAuthorize(Roles = "Administrator")]
     public class UserRolesController : Controller
     {
         private readonly UnitOfWork uow;
@@ -18,7 +20,6 @@ namespace UserManagement.Web.Controllers
             uow = new UnitOfWork();
         }
 
-        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public ActionResult ManageRoles()
         {

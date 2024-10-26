@@ -18,17 +18,26 @@ namespace UserManagement.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
+        // Responsável por capturar e tratar erros não gerenciados que ocorrem em toda a aplicação.
         protected void Application_Error()
         {
+            // Obtém a última exceção que ocorreu durante o processamento da solicitação
             Exception exception = Server.GetLastError();
+
+            // Limpa a última exceção da lista de erros do servidor
             Server.ClearError();
 
-            var httpException = exception as HttpException;
-            int code = httpException?.GetHttpCode() ?? 500; // Se não for HttpException, trata como erro 500
+            // Tenta converter a exceção em HttpException
+            HttpException httpException = exception as HttpException;
 
+            // Obtém o código HTTP da exceção, ou 500 se não for uma HttpException
+            int code = httpException?.GetHttpCode() ?? 500;
+
+            // Redireciona o usuário para a página de tratamento de erros com o código apropriado
             Response.Redirect(url: $"/ErrorHandler/Index?code={code}");
         }
 
+        // Configura a autorização de usuários e roles após o usuário ser autenticado pela aplicação.
         protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
         {
             // Ler o cookie de autenticação FormsAuthentication

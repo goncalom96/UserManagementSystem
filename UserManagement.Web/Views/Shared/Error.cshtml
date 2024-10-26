@@ -22,13 +22,13 @@
     <h2>An error occurred while processing your request.</h2>
     <br />
 
-    <div class="alert-text">
-        @if (@TempData["ErrorMessage"] != null)
-        {
-            <p>@ViewBag.ErrorTitle</p>
+    @if (@TempData["ErrorMessage"] != null && TempData["ErrorTitle"] != null)
+    {
+        <div class="alert-text">
+            <p>@TempData["ErrorTitle"]</p>
             <p>@TempData["ErrorMessage"]</p>
-        }
-    </div>
+        </div>
+    }
 
     <div style="padding-top: 50px;">
         <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
