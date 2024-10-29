@@ -21,7 +21,6 @@ namespace UserManagement.DAL.Repository
             IQueryable<UserRole> roles = context.UserRoles;
 
             return roles != null ? roles : null;
-
         }
 
         public UserRole GetRole(Expression<Func<UserRole, bool>> predicate)

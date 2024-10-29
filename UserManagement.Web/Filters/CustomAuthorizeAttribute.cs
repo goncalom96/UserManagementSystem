@@ -10,7 +10,7 @@ namespace UserManagement.Web.Filters
         {
             if (HttpContext.Current.User == null || !HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                // Usuário não autenticado, redireciona para a página de login
+                // User não autenticado, redireciona para a página de login
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary
                 {
                     { "Controller", "UserLogins" },
@@ -19,7 +19,7 @@ namespace UserManagement.Web.Filters
             }
             else
             {
-                // Usuário autenticado, mas sem a permissão necessária (sem o role correto)
+                // User autenticado, mas sem a permissão necessária (sem o role correto)
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary
                 {
                     { "Controller", "ErrorHandler" },

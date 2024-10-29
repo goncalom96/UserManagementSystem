@@ -7,6 +7,7 @@ using UserManagement.DAL.Models.Users;
 using UserManagement.DAL.Repository;
 using UserManagement.Web.Filters;
 using UserManagement.Web.Models;
+using UserManagement.Web.Services;
 
 namespace UserManagement.Web.Controllers
 {
@@ -134,49 +135,59 @@ namespace UserManagement.Web.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            UserLogin userLogin = new UserLogin();
-            return View(userLogin);
+            RegisterViewModel userRegister = new RegisterViewModel();
+            return View(userRegister);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(UserLogin userLogin)
+        public ActionResult Register(RegisterViewModel userRegister)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    UserLogin userLoginExist = uow.UserLoginRepository.GetUser(u => (u.UserName == userLogin.UserName) || (u.Email == userLogin.Email));
+                    // Verificar se o user já existe
+                    UserLogin userExist = uow.UserLoginRepository.GetUser(u =>
+                        (u.UserName == userRegister.UserName) ||
+                        (u.Email == userRegister.Email));
 
-                    if (userLoginExist != null)
+                    // Verificações de dados existentes do user
+                    if (userExist != null)
                     {
-                        if (userLoginExist.UserName == userLogin.UserName && userLoginExist.Email != userLogin.Email)
+                        // Verificações de dados existentes do user
+                        if (userExist.UserName == userRegister.UserName)
                         {
-                            ModelState.AddModelError("UserName", errorMessage: "Username already exists.");
+                            ModelState.AddModelError("UserName", "Username already exists.");
                         }
 
-                        if (userLoginExist.Email == userLogin.Email && userLoginExist.UserName != userLogin.UserName)
+                        if (userExist.Email == userRegister.Email)
                         {
                             ModelState.AddModelError("Email", "E-mail already exists.");
                         }
 
-                        if (userLoginExist.UserName == userLogin.UserName && userLoginExist.Email == userLogin.Email)
-                        {
-                            ModelState.AddModelError("UserName", errorMessage: "Username already exists.");
-                            ModelState.AddModelError("Email", "E-mail already exists.");
-                        }
-
-                        return View(userLogin); // Retorna a View com os dados preenchidos
+                        // Retorna a View com os dados preenchidos
+                        return View(userRegister);
                     }
+                    else
+                    {
+                        // Novo UserLogin
+                        UserLogin userLogin = new UserLogin
+                        {
+                            UserName = userRegister.UserName,
+                            Email = userRegister.Email,
+                            Password = userRegister.Password,
+                            UserRoleId = uow.UserRoleRepository.GetRole(r => r.RoleType == UserRole.EnumRole.Guest).UserRoleId,
+                            CreatedAt = DateTime.Now,
+                            IsActived = false
+                        };
+                        // Guardar o novo userLogin
+                        uow.UserLoginRepository.Create(userLogin);
+                        uow.SaveChanges();
 
-                    userLogin.UserRoleId = uow.UserRoleRepository.GetRole(r => r.RoleType == UserRole.EnumRole.Guest).UserRoleId;
-                    userLogin.CreatedAt = DateTime.Now;
-                    userLogin.IsActived = false;
-
-                    uow.UserLoginRepository.Create(userLogin);
-                    uow.SaveChanges(); // O User é guardado apenas no UserProfiles/Create
-
-                    return RedirectToAction("Create", "UserProfiles", new { userLoginId = userLogin.UserLoginId });
+                        // Criação do UserProfile
+                        return RedirectToAction("Create", "UserProfiles", new { userLoginId = userLogin.UserLoginId });
+                    }
                 }
                 catch (Exception ex) // Captura a exceção
                 {
@@ -186,49 +197,89 @@ namespace UserManagement.Web.Controllers
             }
 
             // Retorna a View com os dados preenchidos e erros de validação, se houver
-            return View(userLogin);
+            return View(userRegister);
         }
 
         [HttpGet]
-        public ActionResult ChangePassword()
+        public ActionResult ForgotPassword()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangePassword(string email)
+        public ActionResult ForgotPassword(string email)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(email))
+                try
                 {
-                    ModelState.AddModelError("", "Please enter your Email.");
-                    return View();
+                    UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email);
+
+                    if (userLogin == null)
+                    {
+                        ModelState.AddModelError("", errorMessage: "User not found.");
+                        return View();
+                    }
+                    else
+                    {
+                        // Gera um token para a recuperação da password
+                        string token = Guid.NewGuid().ToString();
+
+                        // Guarda o token na base de dados
+                        userLogin.ResetPasswordCode = token;
+                        uow.SaveChanges();
+
+                        // Criar link de redefinição
+                        string resetLink = Url.Action("ResetPassword", "UserLogins", new { Email = email, Token = token }, Request.Url.Scheme);
+
+                        // Enviar email com o link
+                        string subject = "Reset password";
+                        string body = $"Click on the link to reset your password: <a href='{resetLink}'>Redefinir Senha</a>";
+                        EmailService.SendEmail(email, subject, body);
+                    }
                 }
-
-                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email);
-
-                if (userLogin == null)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "User not found.");
-                    return View();
+                    TempData["ErrorMessage"] = $"Password change failed: {ex.Message}";
+                    return View("Error");
                 }
-
-                //string resetToken = Guid.NewGuid().ToString();
-                //userLogin.PasswordResetToken = resetToken;
-                //userLogin.ResetTokenExpiration = DateTime.Now.AddHours(1); // Token expira em 1 hora
-                uow.SaveChanges();
-
-                // Aqui envias o email com o link de recuperação
-                TempData["Message"] = "Check your email for the password reset link.";
-                return RedirectToAction("ForgotPasswordConfirmation");
             }
-            catch (Exception ex)
+            return View(email);
+        }
+
+        public ActionResult ResetPassword(string email, string code)
+        {
+            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email && u.ResetPasswordCode == code);
+
+            if (userLogin != null)
             {
-                TempData["ErrorMessage"] = $"Password change failed: {ex.Message}";
-                return View("Error");
+                ResetPasswordViewModel model = new ResetPasswordViewModel
+                {
+                    ResetCode = code
+                };
+                return View(model);
             }
+            else
+            {
+                return HttpNotFound();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.ResetPasswordCode == model.ResetCode);
+
+                if (userLogin != null)
+                {
+                    userLogin.Password = model.NewPassword;
+                    userLogin.ResetPasswordCode = string.Empty;
+                }
+            }
+            return View();
         }
 
         [HttpGet]

@@ -136,8 +136,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ForgotPasswordViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\ResetPasswordViewModel.cs" />
+    <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EmailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Images\code.png" />
@@ -201,18 +205,17 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\UserLogins\Login.cshtml" />
     <Content Include="Views\UserLogins\Register.cshtml" />
-    <Content Include="Views\UserLogins\ChangePassword.cshtml" />
     <Content Include="Views\UserProfiles\Create.cshtml" />
     <Content Include="Views\UserProfiles\Details.cshtml" />
     <Content Include="Views\Shared\_Authenticated.cshtml" />
     <Content Include="Views\Shared\_Anonymous.cshtml" />
     <Content Include="Views\UserRoles\ManageRoles.cshtml" />
     <Content Include="Views\UserLogins\ManageUsers.cshtml" />
+    <Content Include="Views\UserLogins\ForgotPassword.cshtml" />
+    <Content Include="Views\UserLogins\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\ErrorHandler\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

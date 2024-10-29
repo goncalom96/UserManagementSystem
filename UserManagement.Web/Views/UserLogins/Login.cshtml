@@ -60,9 +60,8 @@
     <div class="row">
         @* Using: É um bloco que usará um objeto que implementa IDisposable. No caso de formulários HTML em ASP.NET MVC, isso é usado para criar e fechar automaticamente um formulário HTML.*@
         @* Html.BeginForm: Esse método gera o código HTML para iniciar um formulário.*@
-        @* new { ReturnUrl = ViewBag.ReturnUrl }: Um objeto anônimo contendo dados que serão incluídos como parâmetros de consulta na URL do formulário. Aqui, está passando um parâmetro ReturnUrl com o valor de ViewBag.ReturnUrl.*@
         @* FormMethod.Post: Especifica que o formulário será enviado usando o método HTTP POST. A alternativa seria FormMethod.Get.*@
-        @using (Html.BeginForm("Login", "UserLogins", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Login", "UserLogins", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
@@ -90,7 +89,7 @@
             <div class="form-group">
                 <div class="half-btn">
                     <a id="RegisteUser" class="btn btn-outline-secondary btn-sm" href="@Url.Action("Register", "UserLogins")">Sign Up</a>
-                    <a id="ChangePassword" class="btn btn-outline-secondary btn-sm" href="@Url.Action("ChangePassword", "UserLogins")">Forgot password?</a>
+                    <a id="ChangePassword" class="btn btn-outline-secondary btn-sm" href="@Url.Action("ForgotPassword", "UserLogins")">Forgot password?</a>
                 </div>
             </div>
 

@@ -8,20 +8,34 @@ namespace UserManagement.Web.Controllers
         {
             switch (code)
             {
+                case 400:
+                    TempData["ErrorTitle"] = "Bad request";
+                    TempData["ErrorMessage"] = "Invalid request.";
+                    break;
+
                 case 401:
+                    TempData["ErrorTitle"] = "Unauthorized";
+                    TempData["ErrorMessage"] = "Login required.";
+                    break;
+
                 case 403:
-                    TempData["ErrorTitle"] = "Access denied";
-                    TempData["ErrorMessage"] = "Unauthorized page.";
-                    return RedirectToAction("AccessDenied", "ErrorHandler");
+                    TempData["ErrorTitle"] = "Forbidden";
+                    TempData["ErrorMessage"] = "Access denied.";
+                    break;
 
                 case 404:
-                    TempData["ErrorTitle"] = "Page Not Found";
-                    TempData["ErrorMessage"] = "The page you are looking for does not exist.";
+                    TempData["ErrorTitle"] = "Not Found";
+                    TempData["ErrorMessage"] = "Page not found.";
                     break;
 
                 case 500:
                     TempData["ErrorTitle"] = "Internal Server Error";
                     TempData["ErrorMessage"] = "An internal server error occurred.";
+                    break;
+
+                case 503:
+                    TempData["ErrorTitle"] = "Service Unavailable";
+                    TempData["ErrorMessage"] = "The service is temporarily unavailable.";
                     break;
 
                 default:

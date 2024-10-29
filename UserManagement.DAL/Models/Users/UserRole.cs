@@ -9,9 +9,8 @@ namespace UserManagement.DAL.Models.Users
         #region Enums
         public enum EnumRole
         {
-            Administrator = 1,
-            Guest = 2,
-            Employee = 3
+            Administrator,
+            Guest = 1,
         }
 
         #endregion

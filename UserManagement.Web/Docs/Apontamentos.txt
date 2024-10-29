@@ -1,10 +1,9 @@
 --------------------------------------------------------------------------------------------------------------------------------
 // PROJETO
 --------------------------------------------------------------------------------------------------------------------------------
--> MVC5, C#, Entity Framework 6, Code First, HTML, CSS, Razor e JavaScript
--> Autenticação e Gestão de Users (Forms Authentication)
-
-
+-> ASP.NET (Without Identity)
+-> MVC5, C#, Entity Framework 6, Code First, HTML, CSS, Razor e JavaScript, Bootstrap
+-> Projeto: Autenticação e Gestão de Users (c/Forms Authentication)
 
 --------------------------------------------------------------------------------------------------------------------------------
 // OUTRO

@@ -10,10 +10,10 @@ namespace UserManagement.DAL.Models.Users
 
         public enum EnumGender
         {
-            Male = 1,
-            Female = 2,
-            Other = 3,
-            Unknown = 4
+            Male,
+            Female = 1,
+            Unknown = 2,
+            Other = 3
         }
 
         #endregion Enums

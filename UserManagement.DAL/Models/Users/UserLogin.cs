@@ -32,6 +32,10 @@ namespace UserManagement.DAL.Models.Users
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [Display(Name = "Reset code")]
+        [StringLength(100)]
+        public string ResetPasswordCode { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         [Display(Name = "Status")]
