@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.UI.WebControls;
 using UserManagement.DAL.Models.Users;
 using UserManagement.DAL.Repository;
 using UserManagement.Web.Filters;
@@ -234,9 +235,12 @@ namespace UserManagement.Web.Controllers
                         string resetLink = Url.Action("ResetPassword", "UserLogins", new { Email = email, Token = token }, Request.Url.Scheme);
 
                         // Enviar email com o link
-                        string subject = "Reset password";
-                        string body = $"Click on the link to reset your password: <a href='{resetLink}'>Redefinir Senha</a>";
+                        string subject = "Reset password instructions";
+                        string body = $"Hey <b>{userLogin.UserName}</b>&#128513;,<br/><br/>Click on the link to reset your password:<br/><br/><a href='{resetLink}'>Reset password</a><br/><br/>Best regards,<br/>UserManagement Team";
+
                         EmailService.SendEmail(email, subject, body);
+
+                        return View("ConfirmationMessage");
                     }
                 }
                 catch (Exception ex)
@@ -248,15 +252,15 @@ namespace UserManagement.Web.Controllers
             return View(email);
         }
 
-        public ActionResult ResetPassword(string email, string code)
+        public ActionResult ResetPassword(string email, string token)
         {
-            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email && u.ResetPasswordCode == code);
+            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email && u.ResetPasswordCode == token);
 
             if (userLogin != null)
             {
                 ResetPasswordViewModel model = new ResetPasswordViewModel
                 {
-                    ResetCode = code
+                    ResetCode = token
                 };
                 return View(model);
             }

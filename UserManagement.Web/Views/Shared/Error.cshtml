@@ -10,27 +10,15 @@
         align-items: center;
         text-align: center;
     }
-
-    .alert-text {
-        color: brown;
-        font-size: large;
-    }
 </style>
 
 <section class="error-container" aria-labelledby="aspnetTitle">
-    <h1>@ViewBag.Title</h1>
-    <h2>An error occurred while processing your request.</h2>
-    <br />
-
-    @if (@TempData["ErrorMessage"] != null && TempData["ErrorTitle"] != null)
-    {
-        <div class="alert-text">
-            <p>@TempData["ErrorTitle"]</p>
-            <p>@TempData["ErrorMessage"]</p>
-        </div>
-    }
-
-    <div style="padding-top: 50px;">
-        <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
+    <div class="alert alert-danger" role="alert">
+        <h1>@ViewBag.Title!</h1>
+        <h4>An error occurred while processing your request.</h4>
+        @if (@TempData["ErrorMessage"] != null && TempData["ErrorTitle"] != null)
+        {
+            <p style="color:black">@TempData["ErrorTitle"] | @TempData["ErrorMessage"]</p>
+        }
     </div>
 </section>

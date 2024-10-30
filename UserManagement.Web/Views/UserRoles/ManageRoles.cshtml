@@ -6,18 +6,19 @@
 
 <section class="" aria-labelledby="aspnetTitle">
 
-    <div class="row center-container">
+    <div class="row">
         <h2>@ViewBag.Title</h2>
     </div>
 
     <br />
 
-    <div class="row">
-        <table class="table table-striped">
+    <div class="table-responsive">
+        <button class="btn btn-success" type="button">@Html.ActionLink("Add Role", "Create", "UserRoles", new { @class = "nav-link" })</button>
+
+        <table class="table table-hover table-striped">
 
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserRoleId)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.First().RoleType)</th>
                     <th scope="col"></th>
                 </tr>
@@ -26,19 +27,14 @@
                 @foreach (var role in Model)
                 {
                     <tr class="table-active">
-                        <th scope="row">@role.UserRoleId</th>
                         <td>@role.RoleType.ToString()</td>
                         <td>
-                            <button class="btn btn-success" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>
+                            <button class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>
                             <button class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
-        <div style="text-align:center; padding-top: 50px;">
-            <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
-        </div>
     </div>
 </section>

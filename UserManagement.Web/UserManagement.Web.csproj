@@ -213,6 +213,7 @@
     <Content Include="Views\UserLogins\ManageUsers.cshtml" />
     <Content Include="Views\UserLogins\ForgotPassword.cshtml" />
     <Content Include="Views\UserLogins\ResetPassword.cshtml" />
+    <Content Include="Views\Shared\ConfirmationMessage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

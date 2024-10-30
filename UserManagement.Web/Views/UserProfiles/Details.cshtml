@@ -5,15 +5,14 @@
 }
 
 <section class="" aria-labelledby="aspnetTitle">
-    <div class="row center-container">
+    <div class="row">
         <h2>@ViewBag.Title</h2>
     </div>
 
     <br />
 
-    <div class="row">
+    <div class="">
         <table class="table">
-
             <thead class="table-dark">
                 <tr>
                     <th scope="col">@Html.DisplayNameFor(model => model.FirstName)</th>
@@ -33,9 +32,5 @@
                 </tr>
             </tbody>
         </table>
-
-        <div style="text-align:center; padding-top: 50px;">
-            <button class="btn btn-dark" type="button">@Html.ActionLink("Back to Home page", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</button>
-        </div>
     </div>
 </section>
