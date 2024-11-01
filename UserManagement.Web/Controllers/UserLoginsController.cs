@@ -151,7 +151,7 @@ namespace UserManagement.Web.Controllers
                     // Verificar se o user já existe
                     UserLogin userExist = uow.UserLoginRepository.GetUser(u =>
                         (u.UserName == userRegister.UserName) ||
-                        (u.Email == userRegister.Email));
+                        (u.EmailAddress == userRegister.EmailAddress));
 
                     // Verificações de dados existentes do user
                     if (userExist != null)
@@ -162,9 +162,9 @@ namespace UserManagement.Web.Controllers
                             ModelState.AddModelError("UserName", "Username already exists.");
                         }
 
-                        if (userExist.Email == userRegister.Email)
+                        if (userExist.EmailAddress == userRegister.EmailAddress)
                         {
-                            ModelState.AddModelError("Email", "E-mail already exists.");
+                            ModelState.AddModelError("EmailAddress", "E-mail already exists.");
                         }
 
                         // Retorna a View com os dados preenchidos
@@ -176,7 +176,8 @@ namespace UserManagement.Web.Controllers
                         UserLogin userLogin = new UserLogin
                         {
                             UserName = userRegister.UserName,
-                            Email = userRegister.Email,
+                            EmailAddress = userRegister.EmailAddress,
+                            PhoneNumber = userRegister.PhoneNumber,
                             Password = userRegister.Password,
                             UserRoleId = uow.UserRoleRepository.GetRole(r => r.RoleType == UserRole.EnumRole.Guest).UserRoleId,
                             CreatedAt = DateTime.Now,
@@ -190,7 +191,7 @@ namespace UserManagement.Web.Controllers
                         return RedirectToAction("Create", "UserProfiles", new { userLoginId = userLogin.UserLoginId });
                     }
                 }
-                catch (Exception ex) // Captura a exceção
+                catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"User registration failed: {ex.Message}";
                     return View("Error");
@@ -215,11 +216,11 @@ namespace UserManagement.Web.Controllers
             {
                 try
                 {
-                    UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email);
+                    UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.EmailAddress == email);
 
                     if (userLogin == null)
                     {
-                        ModelState.AddModelError("", errorMessage: "User not found.");
+                        ModelState.AddModelError("", "User not found.");
                         return View();
                     }
                     else
@@ -228,7 +229,7 @@ namespace UserManagement.Web.Controllers
                         string token = Guid.NewGuid().ToString();
 
                         // Guarda o token na base de dados
-                        userLogin.ResetPasswordCode = token;
+                        userLogin.PasswordRecoveryToken = token;
                         uow.SaveChanges();
 
                         // Criar link de redefinição
@@ -240,6 +241,7 @@ namespace UserManagement.Web.Controllers
 
                         EmailService.SendEmail(email, subject, body);
 
+                        TempData["ConfirmationMessage"] = "Your message has been sent successfully. Please, check your inbox for a password reset link.";
                         return View("ConfirmationMessage");
                     }
                 }
@@ -254,19 +256,19 @@ namespace UserManagement.Web.Controllers
 
         public ActionResult ResetPassword(string email, string token)
         {
-            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.Email == email && u.ResetPasswordCode == token);
+            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.EmailAddress == email && u.PasswordRecoveryToken == token);
 
             if (userLogin != null)
             {
                 ResetPasswordViewModel model = new ResetPasswordViewModel
                 {
-                    ResetCode = token
+                    ResetToken = token
                 };
                 return View(model);
             }
             else
             {
-                return HttpNotFound();
+                return View("Error");
             }
         }
 
@@ -275,15 +277,42 @@ namespace UserManagement.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.ResetPasswordCode == model.ResetCode);
+                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.PasswordRecoveryToken == model.ResetToken);
 
                 if (userLogin != null)
                 {
                     userLogin.Password = model.NewPassword;
-                    userLogin.ResetPasswordCode = string.Empty;
+                    userLogin.PasswordRecoveryToken = string.Empty;
+                    uow.SaveChanges();
+
+                    TempData["ConfirmationMessage"] = "Your password has been successfully changed.";
+                    return View("ConfirmationMessage");
                 }
             }
-            return View();
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult Details()
+        {
+            try
+            {
+                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.UserName == User.Identity.Name);
+
+                if (userLogin == null)
+                {
+                    return RedirectToAction("Register", "UserLogins");
+                }
+                else
+                {
+                    return View(userLogin);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"An error occurred while retrieving user details: {ex.Message}");
+                return View("Error"); // Ou redirecione para uma página de erro
+            }
         }
 
         [HttpGet]

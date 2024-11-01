@@ -30,7 +30,6 @@ namespace UserManagement.DAL.Repository
         public UserLogin GetUser(Expression<Func<UserLogin, bool>> predicate)
         {
             return context.UserLogins.Include(u => u.UserProfile).Include(u => u.UserRole).SingleOrDefault(predicate);
-            //Utilização -> UserLogin user = uow.UserLoginRepository.GetUser(u => u.UserName == login.UserName);
         }
 
         public UserLogin GetUserById(int id)
@@ -109,6 +108,22 @@ namespace UserManagement.DAL.Repository
         public void Create(UserLogin user)
         {
             context.UserLogins.Add(user);
+        }
+
+        public void Update(int userLoginId)
+        {
+            UserLogin userLogin = context.UserLogins.Find(userLoginId);
+            context.Entry(userLogin).State = EntityState.Modified;
+
+            //context.UserLogins.AddOrUpdate(userLogin);
+        }
+
+        public void Delete(int userLoginId)
+        {
+            //UserLogin userLogin = GetUserById(userLoginId);
+            UserLogin userLogin = context.UserLogins.Find(userLoginId);
+
+            context.UserLogins.Remove(userLogin);
         }
     }
 }

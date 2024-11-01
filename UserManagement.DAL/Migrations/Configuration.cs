@@ -24,7 +24,7 @@
             context.SaveChanges();
 
             context.UserLogins.AddOrUpdate(
-                ul => new { ul.UserName, ul.Email, ul.Password }, StartUpData.GetUserLogins(context).ToArray());
+                ul => new { ul.UserName, ul.EmailAddress, ul.Password }, StartUpData.GetUserLogins(context).ToArray());
             context.SaveChanges();
 
             context.UserProfiles.AddOrUpdate(

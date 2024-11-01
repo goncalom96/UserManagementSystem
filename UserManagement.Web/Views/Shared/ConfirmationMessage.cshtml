@@ -13,8 +13,8 @@
 </style>
 
 <section class="confirmation-container" aria-labelledby="aspnetTitle">
-    <div class="alert alert-success"  role="alert">
+    <div class="alert alert-success" role="alert">
         <h1>@ViewBag.Title!</h1>
-        <h4>Your message has been sent successfully. Please, check your inbox for a password reset link.</h4>
+        <h4>@TempData["ConfirmationMessage"]</h4>
     </div>
 </section>

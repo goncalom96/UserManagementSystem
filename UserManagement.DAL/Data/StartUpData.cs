@@ -25,7 +25,8 @@ namespace UserManagement.DAL.Data
             {
                 new UserLogin() {
                     UserName = "admin",
-                    Email = "admin@hotmail.com",
+                    EmailAddress = "admin@hotmail.com",
+                    PhoneNumber = "123456789",
                     Password = "12345",
                     UserRoleId = context.UserRoles.SingleOrDefault(r => r.RoleType == UserRole.EnumRole.Administrator).UserRoleId,
                     IsActived = false,
@@ -33,7 +34,8 @@ namespace UserManagement.DAL.Data
                 },
                 new UserLogin() {
                     UserName = "guest",
-                    Email = "guest@hotmail.com",
+                    EmailAddress = "guest@hotmail.com",
+                    PhoneNumber = "123456789",
                     Password = "12345",
                     UserRoleId = context.UserRoles.SingleOrDefault(r => r.RoleType == UserRole.EnumRole.Guest).UserRoleId,
                     IsActived = false,

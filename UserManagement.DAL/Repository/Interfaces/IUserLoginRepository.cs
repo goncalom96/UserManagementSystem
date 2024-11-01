@@ -8,7 +8,7 @@ namespace UserManagement.DAL.Repository.Interfaces
     public interface IUserLoginRepository
     {
         UserLogin UserValidation(string username, string password);
-        
+
         UserLogin GetUser(Expression<Func<UserLogin, bool>> predicate);
 
         UserLogin GetUserById(int id);
@@ -18,5 +18,9 @@ namespace UserManagement.DAL.Repository.Interfaces
         //IEnumerable<UserLogin> GetUsers2(Expression<Func<UserLogin, bool>> predicate = null);
 
         void Create(UserLogin user);
+
+        void Update(int id);
+
+        void Delete(int id);
     }
 }

@@ -4,9 +4,8 @@ namespace UserManagement.Web.Models
 {
     public class ResetPasswordViewModel
     {
-        [Display(Name = "Reset code")]
-        [Required(ErrorMessage = "Code is required.")]
-        public string ResetCode { get; set; }
+        [Required(ErrorMessage = "Token is required.")]
+        public string ResetToken { get; set; }
 
         [Display(Name = "New password")]
         [Required(ErrorMessage = "Password is required.")]

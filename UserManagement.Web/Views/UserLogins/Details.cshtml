@@ -1,0 +1,35 @@
+﻿@model UserManagement.DAL.Models.Users.UserLogin
+
+@{
+    ViewBag.Title = "Account";
+}
+
+<section class="" aria-labelledby="aspnetTitle">
+    <div class="row">
+        <h2>@ViewBag.Title</h2>
+    </div>
+
+    <br />
+
+    <div class="">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.UserName)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.EmailAddress)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.CreatedAt)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.UserName</td>
+                    <td>@Model.EmailAddress</td>
+                    <td>@Model.PhoneNumber</td>
+                    <td>@Model.CreatedAt.Date.ToShortDateString()</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+

@@ -1,7 +1,7 @@
 ﻿@model UserManagement.DAL.Models.Users.UserProfile
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Profile";
 }
 
 <section class="" aria-labelledby="aspnetTitle">
@@ -27,7 +27,7 @@
                     <td>@Model.FirstName</td>
                     <td>@Model.LastName</td>
                     <td>@Model.Gender</td>
-                    <td>@Model.DateOfBirth</td>
+                    <td>@Model.DateOfBirth.Date.ToShortDateString()</td>
                     <td>@(string.IsNullOrEmpty(Model.ProfilePictureUrl) ? "NULL" : Model.ProfilePictureUrl)</td>
                 </tr>
             </tbody>

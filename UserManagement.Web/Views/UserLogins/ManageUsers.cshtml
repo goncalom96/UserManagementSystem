@@ -21,7 +21,8 @@
                 <tr>
                     <th scope="col">@Html.DisplayNameFor(model => model.First().UserName)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.First().UserRole.RoleType)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().Email)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().EmailAddress)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -31,7 +32,8 @@
                     <tr class="table-active">
                         <td>@user.UserName</td>
                         <td>@user.UserRole.RoleType</td>
-                        <td>@user.Email</td>
+                        <td>@user.EmailAddress</td>
+                        <td>@user.PhoneNumber</td>
                         <td>
                             <button class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserLogins", new { id = user.UserLoginId }, new { @class = "nav-link" })</button>
                             <button class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserLogins", new { id = user.UserLoginId }, new { @class = "nav-link" })</button>

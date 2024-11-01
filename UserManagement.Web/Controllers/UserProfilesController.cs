@@ -20,7 +20,8 @@ namespace UserManagement.Web.Controllers
             // Cria um novo UserProfile e associa o UserLoginId
             UserProfile userProfile = new UserProfile
             {
-                UserLoginId = userLoginId
+                UserLoginId = userLoginId,
+                DateOfBirth = new DateTime(1990, 1, 1)
             };
             return View(userProfile);
         }
@@ -34,20 +35,22 @@ namespace UserManagement.Web.Controllers
                 try
                 {
                     userProfile.LastModified = DateTime.Now;
-
                     uow.UserProfileRepository.Create(userProfile);
                     uow.SaveChanges();
 
-                    return RedirectToAction("Login", "UserLogins");
+                    TempData["ConfirmationMessage"] = "Your account has been successfully created.";
+                    return View("ConfirmationMessage");
                 }
                 catch (Exception ex)
                 {
+                    uow.UserLoginRepository.Delete(userProfile.UserLoginId);
+                    uow.SaveChanges();
                     TempData["ErrorMessage"] = $"Registration failed: {ex.Message}";
                     return View("Error");
                 }
             }
 
-            // Retorna a View com os dados preenchidos e erros de validação, se houver
+            // Retorna a View com os dados preenchidos
             return View(userProfile);
         }
 
