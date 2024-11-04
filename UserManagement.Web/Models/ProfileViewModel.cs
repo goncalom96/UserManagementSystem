@@ -1,25 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web;
+using static UserManagement.DAL.Models.Users.UserProfile;
 
-namespace UserManagement.DAL.Models.Users
+namespace UserManagement.Web.Models
 {
-    public class UserProfile
+    public class ProfileViewModel
     {
-        #region Enums
-        public enum EnumGender
-        {
-            Unknown,
-            Male = 1,
-            Female = 2,
-            Other = 3
-        }
-        #endregion Enums
-
-        #region Scalar Properties
-
-        // Relação 1-1
-        [Key, ForeignKey("UserLogin")]
         [Display(Name = "UserId")]
         public int UserLoginId { get; set; }
 
@@ -39,21 +27,10 @@ namespace UserManagement.DAL.Models.Users
 
         [Display(Name = "Date of Birth")]
         [Required(ErrorMessage = "Date of Birth is required.")]
-        [Column(TypeName = "date")] // Grava apenas a data na DB em vez de gravar data e hora (datetime)
+        [Column(TypeName = "date")]
         public DateTime DateOfBirth { get; set; }
 
         [Display(Name = "Image")]
-        [StringLength(200)]
-        public string ImageUrl { get; set; }
-
-        public DateTime LastModified { get; set; }
-
-        #endregion Scalar Properties
-
-        #region Navigation Properties
-
-        public virtual UserLogin UserLogin { get; set; }
-
-        #endregion Navigation Properties
+        public HttpPostedFileBase ImageFile { get; set; }
     }
 }

@@ -19,7 +19,7 @@
                     <th scope="col">@Html.DisplayNameFor(model => model.LastName)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.Gender)</th>
                     <th scope="col">@Html.DisplayNameFor(model => model.DateOfBirth)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.ProfilePictureUrl)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.ImageUrl)</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +28,9 @@
                     <td>@Model.LastName</td>
                     <td>@Model.Gender</td>
                     <td>@Model.DateOfBirth.Date.ToShortDateString()</td>
-                    <td>@(string.IsNullOrEmpty(Model.ProfilePictureUrl) ? "NULL" : Model.ProfilePictureUrl)</td>
+                    <td>
+                        <img src=@(string.IsNullOrEmpty(Model.ImageUrl) ? "NULL" : @Model.ImageUrl) height="40" width="40" alt="Profile Image" />
+                    </td>
                 </tr>
             </tbody>
         </table>

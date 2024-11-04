@@ -7,24 +7,27 @@ namespace UserManagement.Web.Services
 {
     public class EmailService
     {
-        public static void SendEmail(string to, string subject, string body)
+        public EmailService()
+        {
+        }
+
+        public void SendEmail(string to, string subject, string body)
         {
             // Cria uma nova mensagem de email
-            var mail = new MailMessage();
+            var mail = new MailMessage
+            {
+                // Define o remetente do email
+                From = new MailAddress(ConfigurationManager.AppSettings["SMTP_User"]),
+                Subject = subject,    // Assunto do email
+                Body = body,          // Corpo da mensagem (conteúdo do email)
+                IsBodyHtml = true     // Configura o corpo da mensagem para aceitar HTML
+            };
 
-            // Define o remetente do email
-            mail.From = new MailAddress(ConfigurationManager.AppSettings["SMTP_User"]);
-            // Destinatário do email, adicionando o endereço à lista "To"
+            // Adiciona o destinatário do email
             mail.To.Add(to);
-            // Assunto do email
-            mail.Subject = subject;
-            // Corpo da mensagem (conteúdo do email)
-            mail.Body = body;
-            // Configura o corpo da mensagem para aceitar HTML, permitindo formatação no email
-            mail.IsBodyHtml = true;
 
             // Configura o cliente SMTP, responsável por enviar o email
-            var smtp = new SmtpClient(ConfigurationManager.AppSettings["SMTP_Host"]) // Define o servidor SMTP
+            SmtpClient smtp = new SmtpClient(ConfigurationManager.AppSettings["SMTP_Host"]) // Define o servidor SMTP
             {
                 Port = Convert.ToInt16(ConfigurationManager.AppSettings["SMTP_Port"]),
                 DeliveryMethod = SmtpDeliveryMethod.Network,

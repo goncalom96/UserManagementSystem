@@ -23,6 +23,7 @@ namespace UserManagement.DAL.Models.Users
         [StringLength(maximumLength: 15, ErrorMessage = "Username must be a string with a maximum length of 15")]
         public string UserName { get; set; }
 
+        [Display(Name = "Email Address")]
         [Required(ErrorMessage = "E-mail is required.")]
         [StringLength(maximumLength: 100, MinimumLength = 5, ErrorMessage = "E-mail has a limit of 5 to 100 characters")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]

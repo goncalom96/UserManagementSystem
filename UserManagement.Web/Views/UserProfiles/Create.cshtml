@@ -1,4 +1,4 @@
-﻿@model UserManagement.DAL.Models.Users.UserProfile
+﻿@model UserManagement.Web.Models.ProfileViewModel
 
 @{
     ViewBag.Title = "Profile";
@@ -41,7 +41,8 @@
     <br />
 
     <div>
-        @using (Html.BeginForm("Create", "UserProfiles", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @*enctype = "multipart/form-data": Este é o atributo mais importante para o upload de arquivos, pois permite que os dados do formulário sejam enviados corretamente, incluindo arquivos.*@
+        @using (Html.BeginForm("Create", "UserProfiles", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
@@ -80,10 +81,10 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.ProfilePictureUrl, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(m => m.ImageFile, new { @class = "form-label col-md-2" })
                 <div class="col-md-10">
-                    <input type="file" name="file" />
-                    @Html.ValidationMessageFor(m => m.ProfilePictureUrl, "", new { @class = "text-danger small" })
+                    <input type="file" name="ImageFile" class="form-control" />
+                    @Html.ValidationMessageFor(m => m.ImageFile, "", new { @class = "text-danger small" })
                 </div>
             </div>
 

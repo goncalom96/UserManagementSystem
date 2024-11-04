@@ -15,11 +15,14 @@ namespace UserManagement.Web.Controllers
     public class UserLoginsController : Controller
     {
         private readonly UnitOfWork uow;
+        private readonly EmailService emailService;
+
 
         // Instância direta do UnitOfWork dentro do construtor
         public UserLoginsController()
         {
             uow = new UnitOfWork();
+            emailService = new EmailService();
         }
 
         // Injetação do UnitOfWork via construtor
@@ -220,7 +223,7 @@ namespace UserManagement.Web.Controllers
 
                     if (userLogin == null)
                     {
-                        ModelState.AddModelError("", "User not found.");
+                        ModelState.AddModelError("", "Invalid e-mail address!");
                         return View();
                     }
                     else
@@ -239,9 +242,9 @@ namespace UserManagement.Web.Controllers
                         string subject = "Reset password instructions";
                         string body = $"Hey <b>{userLogin.UserName}</b>&#128513;,<br/><br/>Click on the link to reset your password:<br/><br/><a href='{resetLink}'>Reset password</a><br/><br/>Best regards,<br/>UserManagement Team";
 
-                        EmailService.SendEmail(email, subject, body);
+                        emailService.SendEmail(email, subject, body);
 
-                        TempData["ConfirmationMessage"] = "Your message has been sent successfully. Please, check your inbox for a password reset link.";
+                        TempData["ConfirmationMessage"] = "Your message has been sent successfully. Check your inbox for a password reset link.";
                         return View("ConfirmationMessage");
                     }
                 }

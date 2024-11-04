@@ -52,6 +52,9 @@
     <EmbeddedResource Include="Migrations\202410311813573_Migration03.resx">
       <DependentUpon>202410311813573_Migration03.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411041609013_Migration04.resx">
+      <DependentUpon>202411041609013_Migration04.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\StartUpData.cs" />
@@ -67,6 +70,10 @@
     <Compile Include="Migrations\202410311813573_Migration03.cs" />
     <Compile Include="Migrations\202410311813573_Migration03.Designer.cs">
       <DependentUpon>202410311813573_Migration03.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202411041609013_Migration04.cs" />
+    <Compile Include="Migrations\202411041609013_Migration04.Designer.cs">
+      <DependentUpon>202411041609013_Migration04.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Users\UserLogin.cs" />
