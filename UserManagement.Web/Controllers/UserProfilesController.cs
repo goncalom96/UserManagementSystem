@@ -38,9 +38,6 @@ namespace UserManagement.Web.Controllers
             {
                 try
                 {
-                    // Caminho relativo da imagem usado para armazenar no banco e referenciar a imagem ao exibi-la na aplicação.
-                    string imageUrl = imageService.SaveImage(profile.ImageFile);
-
                     // Novo userProfile
                     UserProfile userProfile = new UserProfile()
                     {
@@ -49,7 +46,7 @@ namespace UserManagement.Web.Controllers
                         LastName = profile.LastName,
                         DateOfBirth = profile.DateOfBirth,
                         Gender = profile.Gender,
-                        ImageUrl = imageUrl,
+                        ImageUrl = imageService.SaveImage(profile.ImageFile), // Caminho relativo da imagem usado para armazenar no banco e referenciar a imagem ao exibi-la na aplicação.
                         LastModified = DateTime.Now,
                     };
 
@@ -79,26 +76,21 @@ namespace UserManagement.Web.Controllers
             {
                 UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.UserName == User.Identity.Name);
 
-                if (userLogin == null)
+                if (userLogin != null)
                 {
-                    return RedirectToAction("Register", "UserLogins");
-                }
+                    UserProfile userProfile = uow.UserProfileRepository.GetUserProfile(u => u.UserLoginId == userLogin.UserLoginId);
 
-                UserProfile userProfile = uow.UserProfileRepository.GetUserProfile(u => u.UserLoginId == userLogin.UserLoginId);
-
-                if (userProfile != null)
-                {
                     return View(userProfile);
                 }
                 else
                 {
-                    return RedirectToAction(actionName: "Edit", "UserProfiles");
+                    return RedirectToAction("Register", "UserLogins");
                 }
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", $"An error occurred while retrieving user details: {ex.Message}");
-                return View("Error");           }
+                return View("Error");
             }
         }
     }

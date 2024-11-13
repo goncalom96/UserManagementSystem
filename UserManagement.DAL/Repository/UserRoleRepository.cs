@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using UserManagement.DAL.Data;
@@ -26,6 +27,28 @@ namespace UserManagement.DAL.Repository
         public UserRole GetRole(Expression<Func<UserRole, bool>> predicate)
         {
             return context.UserRoles.SingleOrDefault(predicate);
+        }
+
+        public UserRole GetRoleById(int id)
+        {
+            UserRole roleFound = context.UserRoles.SingleOrDefault(r => r.UserRoleId == id);
+
+            return roleFound != null ? roleFound : null;
+        }
+
+        public void Create(UserRole userRole)
+        {
+            context.UserRoles.Add(userRole);
+        }
+
+        public void Edit(UserRole userRole)
+        {
+            context.Entry(userRole).State = EntityState.Modified;
+        }
+
+        public void Delete(UserRole userRole)
+        {
+            context.UserRoles.Remove(userRole);
         }
     }
 }

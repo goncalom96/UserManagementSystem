@@ -12,8 +12,10 @@
 
     <br />
 
+    <button id="btn-create" class="btn btn-success" type="button">Add Role</button>
+    @*<button id="btn-create" class="btn btn-success" type="button">@Html.ActionLink("Add Role", "Create", "UserRoles", new { @class = "nav-link" })</button>*@
+
     <div class="table-responsive">
-        <button class="btn btn-success" type="button">@Html.ActionLink("Add Role", "Create", "UserRoles", new { @class = "nav-link" })</button>
 
         <table class="table table-hover table-striped">
 
@@ -26,11 +28,14 @@
             <tbody>
                 @foreach (var role in Model)
                 {
-                    <tr class="table-active">
+                    <tr data-id="@role.UserRoleId" class="table-active">
                         <td>@role.RoleType.ToString()</td>
                         <td>
-                            <button class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>
-                            <button class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>
+                            <button class="btn-edit btn btn-secondary" type="button" data-toggle="modal" data-target="#userModal">Edit</button>
+                            <button class="btn-delete btn btn-danger" type="button" data-toggle="modal" data-target="#userModal">Delete</button>
+
+                            @*<button id="btn-edit" class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
+                            @*<button id="btn-delete" class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
                         </td>
                     </tr>
                 }
@@ -38,3 +43,46 @@
         </table>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript
+
+    var btnCreate = document.getElementById("btn-create");
+    var btnEdit = document.getElementById("btn-edit");
+    var btnDelete = document.getElementById("btn-delete");
+
+    btnCreate.
+
+    btnCreate.onclick = () => {
+
+        var
+
+        alert('Click no botão "AddRole"');
+    };
+
+    //document.getElementById("btn-create").onclick = function () {
+    //    alert('Click no botão "AddRole"');
+    //};
+
+</script>

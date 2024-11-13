@@ -1,0 +1,69 @@
+﻿@model UserManagement.DAL.Models.Users.UserLogin
+
+@{
+    ViewBag.Title = "Edit user";
+}
+
+<section class="forms-container">
+
+    <div class="row">
+        <h1 class="text-uppercase">@ViewBag.Title</h1>
+    </div>
+
+    <br />
+
+    <div class="row">
+        @using (Html.BeginForm("Edit", "UserLogins", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(m => m.UserLoginId)
+
+            @Html.HiddenFor(m => m.CreatedAt)
+
+            @Html.HiddenFor(m => m.UserRoleId)
+
+            @Html.HiddenFor(m => m.IsActived)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.EmailAddress, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", placeholder = "E-mail" })
+                    @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PhoneNumber, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Phone number" })
+                    @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "form-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success fw-bold text-uppercase">Edit</button>
+            </div>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger small" })
+
+        }
+    </div>
+</section>
+
