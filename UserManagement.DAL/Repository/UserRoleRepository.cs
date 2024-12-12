@@ -19,9 +19,9 @@ namespace UserManagement.DAL.Repository
 
         public IQueryable<UserRole> GetRoles()
         {
-            IQueryable<UserRole> roles = context.UserRoles;
+            IQueryable<UserRole> userRoles = context.UserRoles;
 
-            return roles != null ? roles : null;
+            return userRoles != null ? userRoles : null;
         }
 
         public UserRole GetRole(Expression<Func<UserRole, bool>> predicate)
@@ -31,9 +31,13 @@ namespace UserManagement.DAL.Repository
 
         public UserRole GetRoleById(int id)
         {
-            UserRole roleFound = context.UserRoles.SingleOrDefault(r => r.UserRoleId == id);
+            //Filtro personalizado qualquer condição.
+            //UserRole roleFound = context.UserRoles.SingleOrDefault(r => r.UserRoleId == id);
 
-            return roleFound != null ? roleFound : null;
+            // Filtro personalizado apenas por chave primária.
+            UserRole userRoleFound = context.UserRoles.Find(id);
+
+            return userRoleFound != null ? userRoleFound : null;
         }
 
         public void Create(UserRole userRole)
@@ -43,12 +47,19 @@ namespace UserManagement.DAL.Repository
 
         public void Edit(UserRole userRole)
         {
+            //Associa o objeto ao contexto e altera o seu estado para "Modified".
             context.Entry(userRole).State = EntityState.Modified;
+
+            // Deve ser evitado
+            // Funciona no EF6, mas foi removido no EF Core.
+            //context.UserRoles.AddOrUpdate(userRole);
         }
 
         public void Delete(UserRole userRole)
         {
-            context.UserRoles.Remove(userRole);
+            UserRole userRoleDeleted = context.UserRoles.Find(userRole.UserRoleId);
+
+            context.UserRoles.Remove(userRoleDeleted);
         }
     }
 }

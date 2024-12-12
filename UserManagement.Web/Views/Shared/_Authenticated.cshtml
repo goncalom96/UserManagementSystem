@@ -16,15 +16,33 @@
 </ul>
 
 <ul class="navbar-nav navbar-right">
+
+    @if (User.IsInRole("Administrator"))
+    {
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                Dashboard <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li>
+                    <a class="dropdown-item" href="@Url.Action("ManageUsers", "UserLogins")">Users</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="@Url.Action("ManageRoles", "UserRoles")">Roles</a>
+                </li>
+            </ul>
+        </li>
+    }
+
     <li class="navbar-text" style="color:white">
         @User.Identity.Name
     </li>
 
     <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa fa-user-circle-o" aria-hidden="true" title="@User.Identity.Name"></i>
         </a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <li>
                 <a class="dropdown-item" href="@Url.Action("Details", "UserLogins")">Account</a>
             </li>
@@ -43,21 +61,6 @@
                 </li>
             }
         </ul>
-        @if (User.IsInRole("Administrator"))
-        {
-        <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dashboard <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li>
-                    <a class="dropdown-item" href="@Url.Action("ManageUsers", "UserLogins")">Users</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="@Url.Action("ManageRoles", "UserRoles")">Roles</a>
-                </li>
-            </ul>
-        </li>
-    }
-        </li>
-    </ul>
+    </li>
+
+</ul>

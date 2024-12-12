@@ -11,6 +11,8 @@ namespace UserManagement.DAL.Models.Users
         {
             Administrator,
             Guest = 1,
+            Test = 2,
+            AnotherTest = 3,
         }
 
         #endregion

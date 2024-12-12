@@ -1,88 +1,190 @@
 ﻿@model IQueryable<UserManagement.DAL.Models.Users.UserRole>
 
 @{
-    ViewBag.Title = "Roles";
+    ViewBag.Title = "Roles Management";
 }
 
-<section class="" aria-labelledby="aspnetTitle">
+<style>
 
-    <div class="row">
-        <h2>@ViewBag.Title</h2>
+    /*    #manageRoles {
+        width: 80%;
+        margin: 0 auto;
+    }*/
+
+    #manageRoles_header {
+        text-align: center;
+    }
+
+        #manageRoles_header > div > div {
+            border-bottom: 1px #dddddd solid;
+        }
+
+    #grid_roles > thead {
+        text-align: center;
+    }
+
+        #grid_roles > thead > tr th:nth-child(2) {
+            width: 400px;
+        }
+
+    button {
+        width: 100px;
+    }
+
+    #grid_roles > tbody > tr td:nth-child(2) {
+        text-align: center;
+    }
+</style>
+
+<section id="manageRoles">
+
+    <div id="manageRoles_header">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2>@ViewBag.Title</h2>
+            </div>
+        </div>
     </div>
 
     <br />
 
-    <button id="btn-create" class="btn btn-success" type="button">Add Role</button>
-    @*<button id="btn-create" class="btn btn-success" type="button">@Html.ActionLink("Add Role", "Create", "UserRoles", new { @class = "nav-link" })</button>*@
+    <div id="manageRoles_content">
 
-    <div class="table-responsive">
+        <div id="table_header">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <button id="btnCreate" class="btn btn-success" type="button">Add Role</button>
+                    @*<button id="btn-create" class="btn btn-success" type="button">@Html.ActionLink("Add Role", "Create", "UserRoles", new { @class = "nav-link" })</button>*@
+                </div>
+            </div>
+        </div>
 
-        <table class="table table-hover table-striped">
+        <br />
 
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().RoleType)</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var role in Model)
-                {
-                    <tr data-id="@role.UserRoleId" class="table-active">
-                        <td>@role.RoleType.ToString()</td>
-                        <td>
-                            <button class="btn-edit btn btn-secondary" type="button" data-toggle="modal" data-target="#userModal">Edit</button>
-                            <button class="btn-delete btn btn-danger" type="button" data-toggle="modal" data-target="#userModal">Delete</button>
+        <div id="table-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="table-responsive align-content-md-center">
 
-                            @*<button id="btn-edit" class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
-                            @*<button id="btn-delete" class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        <table id="grid_roles" class="table table-bordered table-hover table-striped">
+
+                            <thead class="table-dark border-white">
+                                <tr>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().RoleType)</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var role in Model)
+                                {
+                                    <tr class="table-active">
+                                        <td class="align-content-center">@role.RoleType.ToString()</td>
+                                        <td>
+                                            <button class="btnEdit btn btn-secondary" type="button" data-id="@role.UserRoleId">Edit</button>
+                                            <button class="btnDelete btn btn-danger" type="button" data-id="@role.UserRoleId">Delete</button>
+                                            @*<button id="btn-edit" class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
+                                            @*<button id="btn-delete" class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </section>
 
-<!-- Modal -->
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div id="modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <!-- O conteúdo do modal será carregado aqui -->
         </div>
     </div>
 </div>
 
-<script>
-    // JavaScript
+@section Scripts {
 
-    var btnCreate = document.getElementById("btn-create");
-    var btnEdit = document.getElementById("btn-edit");
-    var btnDelete = document.getElementById("btn-delete");
+    <script>
 
-    btnCreate.
+        // CREATE - Abrir o modal para criar um Role
+        $("#btnCreate").click(function () {
+            $.ajax({
+                url: "/UserRoles/Create",
+                type: "GET",
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
 
-    btnCreate.onclick = () => {
+                    // Inicializa o modal de forma clara
+                    var modalElement = document.getElementById('modal');
+                    var modal = new bootstrap.Modal(modalElement);
 
-        var
+                    // Exibe o modal
+                    modal.show();
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
 
-        alert('Click no botão "AddRole"');
-    };
 
-    //document.getElementById("btn-create").onclick = function () {
-    //    alert('Click no botão "AddRole"');
-    //};
+        // EDIT - Abrir o modal para editar um Role
+        $(".btnEdit").click(function () {
 
-</script>
+            var roleId = $(this).attr("data-id"); // Obtém o ID
+
+            //alert(roleId)
+
+            $.ajax({
+                url: "/UserRoles/Edit/",
+                type: "GET",
+                data: { id: roleId },
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+
+                    // Inicializa o modal de forma clara
+                    var modalElement = document.getElementById('modal');
+                    var modal = new bootstrap.Modal(modalElement);
+
+                    // Exibe o modal
+                    modal.show();
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
+
+        // EDIT - Abrir o modal para editar um Role
+        $(".btnDelete").click(function () {
+
+            var roleId = $(this).attr("data-id"); // Obtém o ID
+
+            //alert(roleId)
+
+            $.ajax({
+                url: "/UserRoles/Delete/",
+                type: "GET",
+                data: { id: roleId },
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+
+                    // Inicializa o modal de forma clara
+                    var modalElement = document.getElementById('modal');
+                    var modal = new bootstrap.Modal(modalElement);
+
+                    // Exibe o modal
+                    modal.show();
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
+
+    </script>
+}

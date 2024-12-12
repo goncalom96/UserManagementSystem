@@ -32,7 +32,16 @@ namespace UserManagement.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult Create()
+        {
+            UserRole userRole = new UserRole();
+
+            return View(userRole);
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(UserRole userRole)
         {
             if (ModelState.IsValid)
@@ -60,74 +69,88 @@ namespace UserManagement.Web.Controllers
                         uow.UserRoleRepository.Create(userRole);
                         uow.SaveChanges();
 
-                        return View();
+                        return RedirectToAction("ManageRoles");
                     }
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = $"Role registration failed: {ex.Message}";
+                    TempData["ErrorMessage"] = $"An error occurred while creating new role: {ex.Message}";
                     return View("Error");
                 }
             }
             return View(userRole);
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult Edit(int id)
+        {
+            UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
+
+            if (userRole == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(userRole);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(UserRole userRole)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
+                    uow.UserRoleRepository.Edit(userRole);
+                    uow.SaveChanges();
 
-                    if (userRole != null)
-                    {
-                        uow.UserRoleRepository.Edit(userRole);
-                        uow.SaveChanges();
-
-                        return View();
-                    }
-                    else
-                    {
-                        TempData["ErrorMessage"] = "Role not found!";
-                        return View("Error");
-                    }
+                    return RedirectToAction("ManageRoles");
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = $"Role registration failed: {ex.Message}";
+                    TempData["ErrorMessage"] = $"An error occurred while editing the role: {ex.Message}";
                     return View("Error");
                 }
             }
 
-            return View();
+            return View(userRole);
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
+
+            if (userRole == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(userRole);
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(UserRole userRole)
         {
             try
             {
-                UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
-
                 if (userRole != null)
                 {
                     uow.UserRoleRepository.Delete(userRole);
                     uow.SaveChanges();
-                    return View();
+
+                    return RedirectToAction("ManageRoles");
                 }
-                else
-                {
-                    TempData["ErrorMessage"] = "Role not found!";
-                    return View("Error");
-                }
+
+                return HttpNotFound();
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"Failure to delete role: {ex.Message}";
+                TempData["ErrorMessage"] = $"An error occurred while deleting the role: {ex.Message}";
                 return View("Error");
-            }
+            };
         }
     }
 }

@@ -13,7 +13,9 @@ namespace UserManagement.DAL.Data
             List<UserRole> roles = new List<UserRole>()
             {
                 new UserRole() { RoleType = UserRole.EnumRole.Administrator },
-                new UserRole() { RoleType = UserRole.EnumRole.Guest }
+                new UserRole() { RoleType = UserRole.EnumRole.Guest },
+                new UserRole() { RoleType = UserRole.EnumRole.Test },
+                new UserRole() { RoleType = UserRole.EnumRole.AnotherTest }
             };
 
             return roles;

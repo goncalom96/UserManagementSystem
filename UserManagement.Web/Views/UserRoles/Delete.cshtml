@@ -1,0 +1,35 @@
+﻿@model UserManagement.DAL.Models.Users.UserRole
+
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Delete role</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+@using (Html.BeginForm("Delete", "UserRoles", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.UserRoleId)
+
+    @Html.HiddenFor(model => model.RoleType)
+
+    @Html.HiddenFor(model => model.UserLogins)
+
+    <div class="modal-body">
+        <p>Are you sure you want to delete this role <span class="text-uppercase" style="color:darkred">@Html.DisplayFor(model => model.RoleType)</span>? This action cannot be undone.</p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

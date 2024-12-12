@@ -23,7 +23,7 @@ namespace UserManagement.Web
 
             // Bundle de scripts Bootstrap
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.bundle.min.js"));
 
             // Bundle de estilos (CSS)
             bundles.Add(new StyleBundle("~/Content/css").Include(
