@@ -17,7 +17,6 @@ namespace UserManagement.Web.Controllers
         private readonly UnitOfWork uow;
         private readonly EmailService emailService;
 
-
         // Instância direta do UnitOfWork dentro do construtor
         public UserLoginsController()
         {
@@ -101,7 +100,7 @@ namespace UserManagement.Web.Controllers
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"Failed to Log In: {ex.Message}";
-                    return View("Error");
+                    return View("_Error");
                 }
             }
 
@@ -132,7 +131,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Failed to Log Out: {ex.Message}";
-                return View("Error");
+                return View("_Error");
             }
         }
 
@@ -197,7 +196,7 @@ namespace UserManagement.Web.Controllers
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"User registration failed: {ex.Message}";
-                    return View("Error");
+                    return View("_Error");
                 }
             }
 
@@ -245,13 +244,13 @@ namespace UserManagement.Web.Controllers
                         emailService.SendEmail(email, subject, body);
 
                         TempData["ConfirmationMessage"] = "Your message has been sent successfully. Check your inbox for a password reset link.";
-                        return View("ConfirmationMessage");
+                        return View("_ConfirmationMessage");
                     }
                 }
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"Password change failed: {ex.Message}";
-                    return View("Error");
+                    return View("_Error");
                 }
             }
             return View(email);
@@ -271,7 +270,7 @@ namespace UserManagement.Web.Controllers
             }
             else
             {
-                return View("Error");
+                return View("_Error");
             }
         }
 
@@ -289,7 +288,7 @@ namespace UserManagement.Web.Controllers
                     uow.SaveChanges();
 
                     TempData["ConfirmationMessage"] = "Your password has been successfully changed.";
-                    return View("ConfirmationMessage");
+                    return View("_ConfirmationMessage");
                 }
             }
             return View(model);
@@ -314,7 +313,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", $"An error occurred while retrieving user details: {ex.Message}");
-                return View("Error"); // Ou redirecione para uma página de erro
+                return View("_Error"); // Ou redirecione para uma página de erro
             }
         }
 
@@ -330,7 +329,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"An error occurred while retrieving users: {ex.Message}";
-                return View("Error");
+                return View("_Error");
             }
 
             #region Outras opções
@@ -349,6 +348,147 @@ namespace UserManagement.Web.Controllers
             //}
 
             #endregion Outras opções
+        }
+
+        [HttpGet]
+        [CustomAuthorize(Roles = "Administrator")]
+        public ActionResult Create()
+        {
+            UserLogin userLogin = new UserLogin();
+
+            return View(userLogin);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = "Administrator")]
+        public ActionResult Create(UserLogin userLogin)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Verificar se o user já existe
+                    UserLogin userExist = uow.UserLoginRepository.GetUser(u =>
+                        (u.UserName == userLogin.UserName) ||
+                        (u.EmailAddress == userLogin.EmailAddress));
+
+                    // Verificações de dados existentes do user
+                    if (userExist != null)
+                    {
+                        // Verificações de dados existentes do user
+                        if (userExist.UserName == userLogin.UserName)
+                        {
+                            ModelState.AddModelError("UserName", "Username already exists.");
+                        }
+
+                        if (userExist.EmailAddress == userLogin.EmailAddress)
+                        {
+                            ModelState.AddModelError("EmailAddress", "E-mail already exists.");
+                        }
+
+                        // Retorna a View com os dados preenchidos
+                        return View(userLogin);
+                    }
+                    else
+                    {
+                        userLogin.CreatedAt = DateTime.Now;
+                        userLogin.IsActived = false;
+
+                        // Guardar o novo userLogin
+                        uow.UserLoginRepository.Create(userLogin);
+                        uow.SaveChanges();
+
+                        return RedirectToAction("ManageUsers");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred while creating new user: {ex.Message}";
+                    return View("_Error");
+                }
+            }
+            return View(userLogin);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(Roles = "Administrator")]
+        public ActionResult Update(int id)
+        {
+            UserLogin userLogin = uow.UserLoginRepository.GetUserById(id);
+
+            if (userLogin == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(userLogin);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = "Administrator")]
+        public ActionResult Update(UserLogin userLogin)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    uow.UserLoginRepository.Update(userLogin);
+                    uow.SaveChanges();
+
+                    //return RedirectToAction(actionName: "ManageUsers");
+
+                    // Sucesso: Retorne um JSON indicando sucesso
+                    return Json(new { success = true });
+
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred while editing the user: {ex.Message}";
+                    return View("_Error");
+                }
+            }
+
+            return View(userLogin);
+        }
+
+        [HttpGet]
+        [CustomAuthorize(Roles = "Administrator")]
+        public ActionResult Delete(int id)
+        {
+            UserLogin userLogin = uow.UserLoginRepository.GetUserById(id);
+
+            if (userLogin == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(userLogin);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = "Administrator")]
+        public ActionResult Delete(UserLogin userLogin)
+        {
+            try
+            {
+                if (userLogin != null)
+                {
+                    uow.UserLoginRepository.Delete(userLogin.UserLoginId);
+                    uow.SaveChanges();
+
+                    return RedirectToAction("ManageUsers");
+                }
+
+                return HttpNotFound();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the user: {ex.Message}";
+                return View("_Error");
+            };
         }
     }
 }

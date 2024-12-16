@@ -28,7 +28,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"An error occurred while retrieving roles: {ex.Message}";
-                return View("Error");
+                return View("_Error");
             }
         }
 
@@ -75,14 +75,14 @@ namespace UserManagement.Web.Controllers
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"An error occurred while creating new role: {ex.Message}";
-                    return View("Error");
+                    return View("_Error");
                 }
             }
             return View(userRole);
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Update(int id)
         {
             UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
 
@@ -96,13 +96,13 @@ namespace UserManagement.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(UserRole userRole)
+        public ActionResult Update(UserRole userRole)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    uow.UserRoleRepository.Edit(userRole);
+                    uow.UserRoleRepository.Update(userRole);
                     uow.SaveChanges();
 
                     return RedirectToAction("ManageRoles");
@@ -110,7 +110,7 @@ namespace UserManagement.Web.Controllers
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"An error occurred while editing the role: {ex.Message}";
-                    return View("Error");
+                    return View("_Error");
                 }
             }
 
@@ -138,7 +138,7 @@ namespace UserManagement.Web.Controllers
             {
                 if (userRole != null)
                 {
-                    uow.UserRoleRepository.Delete(userRole);
+                    uow.UserRoleRepository.Delete(userRole.UserRoleId);
                     uow.SaveChanges();
 
                     return RedirectToAction("ManageRoles");
@@ -149,7 +149,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"An error occurred while deleting the role: {ex.Message}";
-                return View("Error");
+                return View("_Error");
             };
         }
     }

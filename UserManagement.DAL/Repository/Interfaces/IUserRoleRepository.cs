@@ -15,8 +15,8 @@ namespace UserManagement.DAL.Repository.Interfaces
 
         void Create(UserRole userRole);
 
-        void Edit(UserRole userRole);
+        void Update(UserRole userRole);
 
-        void Delete(UserRole userRole);
+        void Delete(int userRoleId);
     }
 }

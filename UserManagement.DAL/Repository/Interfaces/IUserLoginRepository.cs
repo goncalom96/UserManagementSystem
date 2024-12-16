@@ -17,9 +17,9 @@ namespace UserManagement.DAL.Repository.Interfaces
 
         //IEnumerable<UserLogin> GetUsers2(Expression<Func<UserLogin, bool>> predicate = null);
 
-        void Create(UserLogin user);
+        void Create(UserLogin userLogin);
 
-        void Update(int id);
+        void Update(UserLogin userLogin);
 
         void Delete(int id);
     }

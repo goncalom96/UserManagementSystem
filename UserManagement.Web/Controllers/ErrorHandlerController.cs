@@ -43,14 +43,14 @@ namespace UserManagement.Web.Controllers
                     TempData["ErrorMessage"] = "An unexpected error occurred.";
                     break;
             }
-            return View("Error");
+            return View("_Error");
         }
 
         public ActionResult AccessDenied()
         {
             TempData["ErrorTitle"] = "Access denied";
             TempData["ErrorMessage"] = "Unauthorized page.";
-            return View("Error");
+            return View("_Error");
         }
     }
 }

@@ -5,13 +5,17 @@
 }
 
 <div class="modal-header">
-    <h5 class="modal-title">Create new Role</h5>
+    <h5 class="modal-title">Edit Role</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-@using (Html.BeginForm("Create", "UserRoles", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Update", "UserRoles", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
+
+
     @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.UserRoleId)
 
     <div class="modal-body">
         <div class="form-horizontal">
@@ -26,7 +30,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Create</button>
+        <button type="submit" class="btn btn-success">Edit</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
     </div>
 }

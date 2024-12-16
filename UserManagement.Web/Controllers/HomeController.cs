@@ -14,7 +14,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Failed to access the Home Page: {ex.Message}";
-                return View("Error");
+                return View("_Error");
             }
         }
 
@@ -27,7 +27,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Failed to access the About Page: {ex.Message}";
-                return View("Error");
+                return View("_Error");
             }
         }
     }

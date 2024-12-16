@@ -55,12 +55,12 @@ namespace UserManagement.Web.Controllers
                     uow.SaveChanges();
 
                     TempData["ConfirmationMessage"] = "Your account has been successfully created.";
-                    return View(viewName: "ConfirmationMessage");
+                    return View(viewName: "_ConfirmationMessage");
                 }
                 catch (Exception ex)
                 {
                     TempData["ErrorMessage"] = $"Registration failed: {ex.Message}";
-                    return View("Error");
+                    return View("_Error");
                 }
             }
 
@@ -90,7 +90,7 @@ namespace UserManagement.Web.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", $"An error occurred while retrieving user details: {ex.Message}");
-                return View("Error");
+                return View("_Error");
             }
         }
     }

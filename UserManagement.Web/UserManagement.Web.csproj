@@ -224,26 +224,32 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\UserLogins\Login.cshtml" />
-    <Content Include="Views\UserLogins\Register.cshtml" />
     <Content Include="Views\UserProfiles\Create.cshtml" />
     <Content Include="Views\UserProfiles\Details.cshtml" />
     <Content Include="Views\Shared\_Authenticated.cshtml" />
     <Content Include="Views\Shared\_Anonymous.cshtml" />
     <Content Include="Views\UserRoles\ManageRoles.cshtml" />
-    <Content Include="Views\UserLogins\ManageUsers.cshtml" />
-    <Content Include="Views\UserLogins\ForgotPassword.cshtml" />
-    <Content Include="Views\UserLogins\ResetPassword.cshtml" />
-    <Content Include="Views\Shared\ConfirmationMessage.cshtml" />
-    <Content Include="Views\UserLogins\Details.cshtml" />
-    <Content Include="Views\UserLogins\Create.cshtml" />
-    <Content Include="Views\UserLogins\Edit.cshtml" />
-    <Content Include="Views\UserRoles\Delete.cshtml" />
+    <Content Include="Views\Shared\_Error.cshtml" />
+    <Content Include="Views\Shared\_ConfirmationMessage.cshtml" />
+    <Content Include="Views\UserRoles\_Create.cshtml" />
+    <Content Include="Views\UserRoles\_Delete.cshtml" />
+    <Content Include="Views\UserRoles\_Update.cshtml" />
     <Content Include="Views\UserRoles\Create.cshtml" />
+    <Content Include="Views\UserRoles\Delete.cshtml" />
     <Content Include="Views\UserRoles\Edit.cshtml" />
+    <Content Include="Views\UserRoles\Update.cshtml" />
+    <Content Include="Views\UserLogins\Create.cshtml" />
+    <Content Include="Views\UserLogins\Delete.cshtml" />
+    <Content Include="Views\UserLogins\Details.cshtml" />
+    <Content Include="Views\UserLogins\Edit.cshtml" />
+    <Content Include="Views\UserLogins\ForgotPassword.cshtml" />
+    <Content Include="Views\UserLogins\Login.cshtml" />
+    <Content Include="Views\UserLogins\ManageUsers.cshtml" />
+    <Content Include="Views\UserLogins\Register.cshtml" />
+    <Content Include="Views\UserLogins\ResetPassword.cshtml" />
+    <Content Include="Views\UserLogins\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

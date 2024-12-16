@@ -4,57 +4,230 @@
     ViewBag.Title = "Users management";
 }
 
-<section class="" aria-labelledby="aspnetTitle">
+<style>
 
-    <div class="row">
-        <h2>@ViewBag.Title</h2>
+    /*    #manageUsers {
+        width: 80%;
+        margin: 0 auto;
+    }*/
+
+    #manageUsers_header {
+        text-align: center;
+    }
+
+        #manageUsers_header > div > div {
+            border-bottom: 1px #dddddd solid;
+        }
+
+    #grid_users > thead {
+        text-align: center;
+    }
+
+        #grid_users > thead > tr th:nth-child(7) {
+            width: 300px;
+        }
+
+    button {
+        width: 100px;
+    }
+
+    .btnDetails {
+        width: 50px;
+    }
+
+    #grid_users > tbody > tr td {
+        align-content: center;
+    }
+
+        #grid_users > tbody > tr td:nth-child(6), #grid_users > tbody > tr td:nth-child(7) {
+            text-align: center;
+        }
+</style>
+
+<section id="manageUsers">
+
+    <div id="manageUsers_header">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h2>@ViewBag.Title</h2>
+            </div>
+        </div>
     </div>
 
     <br />
 
-    <div class="">
-        <button id="btn-create" class="btn btn-success" type="button">@Html.ActionLink("Add User", "Create", "UserLogins", new { @class = "nav-link" })</button>
-    </div>
+    <div id="manageUsers_content">
 
-    <div class="table-responsive">
+        <div id="table_header">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <button id="btnCreate" class="btn btn-success" type="button">Add User</button>
+                </div>
+            </div>
+        </div>
 
-        <table class="table table-hover table-striped">
+        <br />
 
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserName)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserRole.RoleType)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().EmailAddress)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().CreatedAt)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.First().IsActived)</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr class="table-active">
-                        <td>@user.UserName</td>
-                        <td>@user.UserRole.RoleType</td>
-                        <td>@user.EmailAddress</td>
-                        <td>@user.PhoneNumber</td>
-                        <td>@user.CreatedAt.Date.ToShortDateString()</td>
-                        <td>@Html.Raw(user.IsActived ? "&#9989;" : "&#10060;")</td>
-                        <td>
-                            <button class="btn btn-secondary btn-edit" type="button">@Html.ActionLink("Edit", "Edit", "UserLogins", new { id = user.UserLoginId }, new { @class = "nav-link" })</button>
-                            <button class="btn btn-danger btn-delete" type="button">@Html.ActionLink("Delete", "Delete", "UserLogins", new { id = user.UserLoginId }, new { @class = "nav-link" })</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div id="table-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="table-responsive align-content-md-center">
+
+                        <table id="grid_users" class="table table-bordered table-hover table-striped">
+
+                            <thead class="table-dark border-white">
+                                <tr>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserName)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().UserRole.RoleType)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().EmailAddress)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().CreatedAt)</th>
+                                    <th scope="col">@Html.DisplayNameFor(model => model.First().IsActived)</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr class="table-active">
+                                        <td>@user.UserName</td>
+                                        <td>@user.UserRole.RoleType</td>
+                                        <td>@user.EmailAddress</td>
+                                        <td>@user.PhoneNumber</td>
+                                        <td>@user.CreatedAt.Date.ToShortDateString()</td>
+                                        <td>@Html.Raw(user.IsActived ? "&#9989;" : "&#10060;")</td>
+                                        <td>
+                                            <button class="btnDetails btn btn-outline-dark" type="button" data-id="@user.UserLoginId">
+                                                <span>
+                                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                                </span>
+                                            </button>
+                                            <button class="btnUpdate btn btn-secondary" type="button" data-id="@user.UserLoginId">Edit</button>
+                                            <button class="btnDelete btn btn-danger" type="button" data-id="@user.UserLoginId">Delete</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<script>
-    // JavaScript
+<div id="modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!-- O conteúdo do modal será carregado aqui -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        // FUNÇÃO GLOBAL para exibir o modal
+        function showModal() {
+            var modalElement = document.getElementById('modal');
+            var modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+
+        // DETAILS - Abrir o modal para mostrar mais detalhes do user
+        $(document).on('click', '.btnDetails', function () {
+            $.ajax({
+                url: "/UserLogins/Details",
+                type: "GET",
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+                    showModal();  // Função para exibir o modal
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
+
+        // CREATE - Abrir o modal para criar um Role
+        $(document).on('click', '#btnCreate', function () {
+            $.ajax({
+                url: "/UserLogins/Create",
+                type: "GET",
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+                    showModal();  // Função para exibir o modal
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
+
+        // EDIT - Abrir o modal para editar um Role
+        $(document).on('click', '.btnUpdate', function () {
+            var userId = $(this).attr("data-id"); // Obtém o ID
+            $.ajax({
+                url: "/UserLogins/Update/",
+                type: "GET",
+                data: { id: userId },
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+                    showModal();  // Função para exibir o modal
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
+
+        // DELETE - Abrir o modal para editar um Role
+        $(document).on('click', '.btnDelete', function () {
+            var userId = $(this).attr("data-id"); // Obtém o ID
+            $.ajax({
+                url: "/UserLogins/Delete/",
+                type: "GET",
+                data: { id: userId },
+                success: function (data) {
+                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+                    showModal();  // Função para exibir o modal
+                },
+                error: function () {
+                    alert("Error to load modal.");
+                }
+            });
+        });
 
 
+        //// Submeter o formulário dentro do modal via AJAX
+        //$("#modal").on('submit', 'form', function (event) {
+        //    event.preventDefault();  // Impede o envio tradicional do formulário
 
-</script>
+        //    var form = $(this);
+        //    $.ajax({
+        //        url: form.attr('action'),  // URL para processar o formulário (POST)
+        //        type: 'POST',
+        //        data: form.serialize(),    // Envia os dados do formulário
+        //        success: function (response) {
+        //            if (response.success) {
+        //                // Fechar o modal e atualizar a página ou fazer outra ação
+        //                $("#modal").modal('hide');
+        //                location.reload();  // Recarrega a página, ou outra ação que você deseje
+        //            } else {
+        //                // Exibe erros no modal (caso haja)
+        //                $('#modal .modal-content').html(response);
+        //                var modal = new bootstrap.Modal($('#modal'));
+        //                modal.show();
+        //            }
+        //        },
+        //        error: function () {
+        //            alert("Erro ao enviar o formulário.");
+        //        }
+        //    });
+        //});
+
+
+    </script>
+}

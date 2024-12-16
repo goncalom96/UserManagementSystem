@@ -45,7 +45,7 @@ namespace UserManagement.DAL.Repository
             context.UserRoles.Add(userRole);
         }
 
-        public void Edit(UserRole userRole)
+        public void Update(UserRole userRole)
         {
             //Associa o objeto ao contexto e altera o seu estado para "Modified".
             context.Entry(userRole).State = EntityState.Modified;
@@ -55,9 +55,9 @@ namespace UserManagement.DAL.Repository
             //context.UserRoles.AddOrUpdate(userRole);
         }
 
-        public void Delete(UserRole userRole)
+        public void Delete(int userRoleId)
         {
-            UserRole userRoleDeleted = context.UserRoles.Find(userRole.UserRoleId);
+            UserRole userRoleDeleted = context.UserRoles.Find(userRoleId);
 
             context.UserRoles.Remove(userRoleDeleted);
         }

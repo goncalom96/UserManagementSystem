@@ -43,18 +43,18 @@ namespace UserManagement.DAL.Repository
         }
 
         /// <summary>
-        /// Get all users data, include role and profile
+        /// Get all userLogins data, include role and profile
         /// </summary>
-        /// <returns>IQueryable<UserLogin> users</returns>
+        /// <returns>IQueryable<UserLogin> userLogins</returns>
         public IQueryable<UserLogin> GetUsers()
         {
             // NOTA: Usar o Include só quando se tem a certeza que se vai utilizar as outras entidades na view para melhorar o desempenho
 
-            IQueryable<UserLogin> users = context.UserLogins
+            IQueryable<UserLogin> userLogins = context.UserLogins
                 .Include(u => u.UserProfile)
                 .Include(u => u.UserRole);
 
-            return users != null ? users : null;
+            return userLogins != null ? userLogins : null;
 
             #region Outras alternativas
 
@@ -62,7 +62,7 @@ namespace UserManagement.DAL.Repository
             // Referenciar "using System.Data.Entity;"
             //using (WebAppContext context = new WebAppContext())
             //{
-            //    IQueryable<UserLogin> users =
+            //    IQueryable<UserLogin> userLogins =
             //    (from u in context.UserLogins select u)
             //    .Include(u => u.UserProfile)
             //    .Include(u => u.UserRole);
@@ -72,28 +72,28 @@ namespace UserManagement.DAL.Repository
             //Model tem de ser do tipo List em vez de IQueryable
             //using (WebAppContext context = new WebAppContext())
             //{
-            //IQueryable<UserLogin> users =
+            //IQueryable<UserLogin> userLogins =
             //    from u in context.UserLogins.Include(u => u.UserProfile).Include(u => u.UserRole)
             //    select u;
 
-            //    return View(users.ToList());
+            //    return View(userLogins.ToList());
             //}
 
             // Opção 4
             // Model tem de ser do tipo List em vez de IQueryable
             //using (WebAppContext context = new WebAppContext())
             //{
-            //    List<UserLogin> users = context.UserLogins.Include(u => u.UserProfile).Include(u => u.UserRole).ToList();
-            //    return View(users);
+            //    List<UserLogin> userLogins = context.UserLogins.Include(u => u.UserProfile).Include(u => u.UserRole).ToList();
+            //    return View(userLogins);
             //}
 
             #endregion Outras alternativas
         }
 
         /// <summary>
-        /// Get all users data, include role and profile
+        /// Get all userLogins data, include role and profile
         /// </summary>
-        /// <returns>IEnumerable<UserLogin> users</returns>
+        /// <returns>IEnumerable<UserLogin> userLogins</returns>
         //public IEnumerable<UserLogin> GetUsers2(Expression<Func<UserLogin, bool>> predicate = null)
         //{
         //    if (predicate != null)
@@ -110,12 +110,9 @@ namespace UserManagement.DAL.Repository
             context.UserLogins.Add(user);
         }
 
-        public void Update(int userLoginId)
+        public void Update(UserLogin userLogin)
         {
-            UserLogin userLogin = context.UserLogins.Find(userLoginId);
             context.Entry(userLogin).State = EntityState.Modified;
-
-            //context.UserLogins.AddOrUpdate(userLogin);
         }
 
         public void Delete(int userLoginId)

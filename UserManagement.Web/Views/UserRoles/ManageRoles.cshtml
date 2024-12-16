@@ -31,9 +31,13 @@
         width: 100px;
     }
 
-    #grid_roles > tbody > tr td:nth-child(2) {
-        text-align: center;
+    #grid_roles > tbody > tr td {
+        align-content: center;
     }
+
+        #grid_roles > tbody > tr td:nth-child(2) {
+            text-align: center;
+        }
 </style>
 
 <section id="manageRoles">
@@ -81,7 +85,7 @@
                                     <tr class="table-active">
                                         <td class="align-content-center">@role.RoleType.ToString()</td>
                                         <td>
-                                            <button class="btnEdit btn btn-secondary" type="button" data-id="@role.UserRoleId">Edit</button>
+                                            <button class="btnUpdate btn btn-secondary" type="button" data-id="@role.UserRoleId">Edit</button>
                                             <button class="btnDelete btn btn-danger" type="button" data-id="@role.UserRoleId">Delete</button>
                                             @*<button id="btn-edit" class="btn btn-secondary" type="button">@Html.ActionLink("Edit", "Edit", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
                                             @*<button id="btn-delete" class="btn btn-danger" type="button">@Html.ActionLink("Delete", "Delete", "UserRoles", new { id = role.UserRoleId }, new { @class = "nav-link" })</button>*@
@@ -111,7 +115,7 @@
     <script>
 
         // CREATE - Abrir o modal para criar um Role
-        $("#btnCreate").click(function () {
+        $(document).on('click', '#btnCreate', function () {
             $.ajax({
                 url: "/UserRoles/Create",
                 type: "GET",
@@ -133,14 +137,14 @@
 
 
         // EDIT - Abrir o modal para editar um Role
-        $(".btnEdit").click(function () {
+        $(document).on('click', '.btnUpdate', function () {
 
             var roleId = $(this).attr("data-id"); // Obtém o ID
 
             //alert(roleId)
 
             $.ajax({
-                url: "/UserRoles/Edit/",
+                url: "/UserRoles/Update/",
                 type: "GET",
                 data: { id: roleId },
                 success: function (data) {
@@ -160,7 +164,7 @@
         });
 
         // EDIT - Abrir o modal para editar um Role
-        $(".btnDelete").click(function () {
+        $(document).on('click', '.btnDelete', function () {
 
             var roleId = $(this).attr("data-id"); // Obtém o ID
 
