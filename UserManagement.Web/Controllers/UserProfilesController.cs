@@ -64,7 +64,6 @@ namespace UserManagement.Web.Controllers
                 }
             }
 
-            // Retorna a View com os dados preenchidos
             return View(profile);
         }
 
@@ -82,10 +81,7 @@ namespace UserManagement.Web.Controllers
 
                     return View(userProfile);
                 }
-                else
-                {
-                    return RedirectToAction("Register", "UserLogins");
-                }
+                return RedirectToAction("Register", "UserLogins");
             }
             catch (Exception ex)
             {

@@ -233,17 +233,12 @@
     <Content Include="Views\UserRoles\ManageRoles.cshtml" />
     <Content Include="Views\Shared\_Error.cshtml" />
     <Content Include="Views\Shared\_ConfirmationMessage.cshtml" />
-    <Content Include="Views\UserRoles\_Create.cshtml" />
-    <Content Include="Views\UserRoles\_Delete.cshtml" />
-    <Content Include="Views\UserRoles\_Update.cshtml" />
     <Content Include="Views\UserRoles\Create.cshtml" />
     <Content Include="Views\UserRoles\Delete.cshtml" />
-    <Content Include="Views\UserRoles\Edit.cshtml" />
     <Content Include="Views\UserRoles\Update.cshtml" />
     <Content Include="Views\UserLogins\Create.cshtml" />
     <Content Include="Views\UserLogins\Delete.cshtml" />
     <Content Include="Views\UserLogins\Details.cshtml" />
-    <Content Include="Views\UserLogins\Edit.cshtml" />
     <Content Include="Views\UserLogins\ForgotPassword.cshtml" />
     <Content Include="Views\UserLogins\Login.cshtml" />
     <Content Include="Views\UserLogins\ManageUsers.cshtml" />

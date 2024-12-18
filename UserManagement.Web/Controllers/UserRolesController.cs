@@ -48,29 +48,23 @@ namespace UserManagement.Web.Controllers
             {
                 try
                 {
-                    // Verificar se o role já existe
                     UserRole roleExist = uow.UserRoleRepository.GetRole(r => r.RoleType == userRole.RoleType);
 
-                    // Verificações de dados existentes do role
+                    // Verificar se o role já existe
                     if (roleExist != null)
                     {
-                        // Verificações de dados existentes do role
-                        if (roleExist.RoleType == userRole.RoleType)
-                        {
-                            ModelState.AddModelError("RoleType", "Role already exists.");
-                        }
+                        ModelState.AddModelError("RoleType", "Role already exists.");
 
                         // Retorna a View com os dados preenchidos
                         return View(userRole);
                     }
-                    else
-                    {
-                        // Guardar o novo userRole
-                        uow.UserRoleRepository.Create(userRole);
-                        uow.SaveChanges();
 
-                        return RedirectToAction("ManageRoles");
-                    }
+                    // Guardar o novo userRole
+                    uow.UserRoleRepository.Create(userRole);
+                    uow.SaveChanges();
+
+                    // Retorna JSON com success = true
+                    return Json(new { success = true, message = "Saved Successfully" }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
@@ -102,10 +96,20 @@ namespace UserManagement.Web.Controllers
             {
                 try
                 {
+                    UserRole roleExist = uow.UserRoleRepository.GetRole(r => r.RoleType == userRole.RoleType);
+
+                    // Verifica se userRole já existe
+                    if (roleExist != null)
+                    {
+                        ModelState.AddModelError("RoleType", "Role already exists.");
+
+                        return View(userRole);
+                    }
+
                     uow.UserRoleRepository.Update(userRole);
                     uow.SaveChanges();
 
-                    return RedirectToAction("ManageRoles");
+                    return Json(new { success = true, message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
@@ -136,12 +140,15 @@ namespace UserManagement.Web.Controllers
         {
             try
             {
-                if (userRole != null)
+                UserRole roleExist = uow.UserRoleRepository.GetRole(r => r.UserRoleId == userRole.UserRoleId && r.RoleType == userRole.RoleType);
+
+                // Verifica se userRole existe
+                if (roleExist != null)
                 {
-                    uow.UserRoleRepository.Delete(userRole.UserRoleId);
+                    uow.UserRoleRepository.Delete(roleExist.UserRoleId);
                     uow.SaveChanges();
 
-                    return RedirectToAction("ManageRoles");
+                    return Json(new { success = true, message = "Deleted Successfully" }, JsonRequestBehavior.AllowGet);
                 }
 
                 return HttpNotFound();

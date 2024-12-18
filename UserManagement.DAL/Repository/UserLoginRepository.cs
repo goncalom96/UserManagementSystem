@@ -117,8 +117,10 @@ namespace UserManagement.DAL.Repository
 
         public void Delete(int userLoginId)
         {
-            //UserLogin userLogin = GetUserById(userLoginId);
-            UserLogin userLogin = context.UserLogins.Find(userLoginId);
+            // Neste caso é preferível esta opção para ir buscar todas as relações do userLogin
+            UserLogin userLogin = GetUserById(userLoginId);
+
+            //UserLogin userLogin = context.UserLogins.Find(userLoginId);
 
             context.UserLogins.Remove(userLogin);
         }
