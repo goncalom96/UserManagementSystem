@@ -27,6 +27,7 @@ namespace UserManagement.Web.Controllers
                 UserLoginId = userLoginId,
                 DateOfBirth = new DateTime(1990, 1, 1)
             };
+
             return View(profile);
         }
 
@@ -81,6 +82,7 @@ namespace UserManagement.Web.Controllers
 
                     return View(userProfile);
                 }
+
                 return RedirectToAction("Register", "UserLogins");
             }
             catch (Exception ex)

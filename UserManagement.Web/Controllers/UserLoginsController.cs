@@ -24,15 +24,7 @@ namespace UserManagement.Web.Controllers
             emailService = new EmailService();
         }
 
-        // Injetação do UnitOfWork via construtor
-        // Segue o princípio da Inversão de Controle(IoC), facilitando a substituição do contexto(para fins de testes, por exemplo)
-        //public UserLoginsController(UnitOfWork uow)
-        //{
-        //    this.uow = uow; // Instância direta do UnitOfWork
-        //}
-
         //LOGIN COM FORMS AUTHENTICATION
-
         [HttpGet]
         public ActionResult Login()
         {
@@ -41,7 +33,7 @@ namespace UserManagement.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] // Token para proteger contra CSRF
+        [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel login)
         {
             if (ModelState.IsValid)
@@ -58,9 +50,10 @@ namespace UserManagement.Web.Controllers
 
                     // Autenticação bem-sucedida e o User fica ativo!
                     userLogin.IsActived = true;
+
+                    // Guarda as alterações
                     uow.SaveChanges();
 
-                    // Opção 1
                     // Cria o ticket de autenticação
                     FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
                         1,                                      // Versão do ticket
@@ -80,18 +73,6 @@ namespace UserManagement.Web.Controllers
                     // Adiciona o cookie à resposta HTTP
                     HttpContext.Response.Cookies.Add(authCookie);
 
-                    #region Outras opções
-
-                    // Opção 2 (sem role) - Configura o cookie de autenticação
-                    // false: Este parâmetro indica se o cookie deve ser persistente. Quando false, o cookie será um cookie de sessão, ou seja, ele será válido apenas durante a sessão do navegador atual. Quando o usuário fechar o navegador, o cookie será descartado.
-                    //FormsAuthentication.SetAuthCookie(userLogin.UserName, false);
-
-                    // Opção 3
-                    //FormsAuthentication.SetAuthCookie(userLogin.UserName, true);
-                    //Session.Add("userole", userLogin.UserRole.RoleType.ToString());
-
-                    #endregion Outras opções
-
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
@@ -101,7 +82,7 @@ namespace UserManagement.Web.Controllers
                 }
             }
 
-            // Se chegou aqui, significa que houve um erro de validação ou autenticação falhou
+            // Retorna a View com os dados preenchidos
             return View(login);
         }
 
@@ -123,6 +104,7 @@ namespace UserManagement.Web.Controllers
                         FormsAuthentication.SignOut();
                     }
                 }
+
                 return RedirectToAction("Login", "UserLogins");
             }
             catch (Exception ex)
@@ -147,7 +129,7 @@ namespace UserManagement.Web.Controllers
             {
                 try
                 {
-                    // Verificar se o user já existe
+                    // Verifica se o user já existe
                     UserLogin userExist = uow.UserLoginRepository.GetUser(u =>
                         (u.UserName == userRegister.UserName) ||
                         (u.EmailAddress == userRegister.EmailAddress));
@@ -170,7 +152,7 @@ namespace UserManagement.Web.Controllers
                         return View(userRegister);
                     }
 
-                    // Associar o userRegister a um novo UserLogin
+                    // Associa o userRegister a um novo UserLogin
                     UserLogin userLogin = new UserLogin
                     {
                         UserName = userRegister.UserName,
@@ -186,7 +168,7 @@ namespace UserManagement.Web.Controllers
                     uow.UserLoginRepository.Create(userLogin);
                     uow.SaveChanges();
 
-                    // Criação do UserProfile
+                    // Redireciona para a criação do UserProfile
                     return RedirectToAction("Create", "UserProfiles", new { userLoginId = userLogin.UserLoginId });
                 }
                 catch (Exception ex)
@@ -250,36 +232,65 @@ namespace UserManagement.Web.Controllers
             return View(email);
         }
 
+        [HttpGet]
         public ActionResult ResetPassword(string email, string token)
         {
-            UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.EmailAddress == email && u.PasswordRecoveryToken == token);
-
-            if (userLogin != null)
+            try
             {
+                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.EmailAddress == email && u.PasswordRecoveryToken == token);
+
+                // Verifica se o user é nulo com base no email e no token
+                if (userLogin == null)
+                {
+                    ModelState.AddModelError("", "Invalid email address or reset token!");
+                    return View("_Error");
+                }
+
                 ResetPasswordViewModel model = new ResetPasswordViewModel
                 {
                     ResetToken = token
                 };
+
                 return View(model);
             }
-            return View("_Error");
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
+            }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ResetPassword(ResetPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
-                UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.PasswordRecoveryToken == model.ResetToken);
-
-                if (userLogin != null)
+                try
                 {
+                    UserLogin userLogin = uow.UserLoginRepository.GetUser(u => u.PasswordRecoveryToken == model.ResetToken);
+
+                    // Verifica o user é nulo com base no token
+                    if (userLogin == null)
+                    {
+                        ModelState.AddModelError("", "The reset token is invalid.");
+                        return View("_Error");
+                    }
+
+                    // Atualiza a password e remove o token
                     userLogin.Password = model.NewPassword;
                     userLogin.PasswordRecoveryToken = null;
+
+                    // Guarda as alterações
                     uow.SaveChanges();
 
                     TempData["ConfirmationMessage"] = "Your password has been successfully changed.";
                     return View("_ConfirmationMessage");
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                    return View("_Error");
                 }
             }
             return View(model);
@@ -296,15 +307,13 @@ namespace UserManagement.Web.Controllers
                 {
                     return RedirectToAction("Register", "UserLogins");
                 }
-                else
-                {
-                    return View(userLogin);
-                }
+
+                return View(userLogin);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"An error occurred while retrieving user details: {ex.Message}");
-                return View("_Error"); // Ou redirecione para uma página de erro
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
             }
         }
 
@@ -319,46 +328,32 @@ namespace UserManagement.Web.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"An error occurred while retrieving users: {ex.Message}";
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
                 return View("_Error");
             }
-
-            #region Outras opções
-
-            // Opção 2 - Ajustar Construtor
-            //IEnumerable<UserLogin> users = uow.UserLoginRepository.GetUsers2();
-            //return View(users);
-
-            // Opção 3
-            // Com esta abordagem não é necessário do método dispose
-            //using (UnitOfWork uow = new UnitOfWork())
-            //{
-            //    IQueryable<UserLogin> users = uow.UserLoginRepository.GetUsers().ToList().AsQueryable();
-
-            //    return View(users);
-            //}
-
-            #endregion Outras opções
         }
 
         [HttpGet]
         [CustomAuthorize(Roles = "Administrator")]
         public ActionResult Create()
         {
-            // Roles existentes na BD
-            IEnumerable<UserRole> roles = uow.UserRoleRepository.GetRoles();
+            try
+            {
+                // Roles existentes na base de dados
+                IEnumerable<UserRole> roles = uow.UserRoleRepository.GetRoles();
 
-            // A classe SelectList é usada para criar uma lista de itens que será associada a um DropDownList na View.
-            // Collection: A lista de itens que você está passando(no seu caso, a lista de papéis roles).
-            // ValueField: O campo que será usado como valor para cada item na dropdown(normalmente o campo que você usa para armazenar o valor selecionado na tabela, como o UserRoleId).
-            // TextField: O campo que será exibido como o texto para o usuário na dropdown(no seu caso, o RoleType, que pode ser algo como "Administrador" ou "Usuário").
+                // Passa os roles para a ViewBag
+                ViewBag.Roles = new SelectList(roles, "UserRoleId", "RoleType");
 
-            // Passa os roles para a ViewBag
-            ViewBag.Roles = new SelectList(roles, "UserRoleId", "RoleType");
+                UserLogin userLogin = new UserLogin();
 
-            UserLogin userLogin = new UserLogin();
-
-            return View(userLogin);
+                return View(userLogin);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
+            }
         }
 
         [HttpPost]
@@ -370,10 +365,9 @@ namespace UserManagement.Web.Controllers
             {
                 try
                 {
-                    // Verificar se o user já existe
                     UserLogin userExist = uow.UserLoginRepository.GetUser(u => (u.UserName == userLogin.UserName) || (u.EmailAddress == userLogin.EmailAddress));
 
-                    // Verificações de dados existentes do user
+                    // Verificar se o user já existe
                     if (userExist != null)
                     {
                         // Verificações de dados existentes do user
@@ -414,20 +408,29 @@ namespace UserManagement.Web.Controllers
         [CustomAuthorize(Roles = "Administrator")]
         public ActionResult Update(int id)
         {
-            UserLogin userLogin = uow.UserLoginRepository.GetUserById(id);
-
-            if (userLogin == null)
+            try
             {
-                return HttpNotFound();
+                // Verifica se o user existe
+                UserLogin userLogin = uow.UserLoginRepository.GetUserById(id);
+
+                if (userLogin == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Roles existentes na base de dados
+                IEnumerable<UserRole> roles = uow.UserRoleRepository.GetRoles();
+
+                // Passa os papéis carregados para a View
+                ViewBag.Roles = new SelectList(roles, "UserRoleId", "RoleType");
+
+                return View(userLogin);
             }
-
-            // Roles existentes na BD
-            IEnumerable<UserRole> roles = uow.UserRoleRepository.GetRoles();
-
-            // Passa os papéis carregados para a View
-            ViewBag.Roles = new SelectList(roles, "UserRoleId", "RoleType");
-
-            return View(userLogin);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
+            }
         }
 
         [HttpPost]
@@ -446,7 +449,7 @@ namespace UserManagement.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = $"An error occurred while editing the user: {ex.Message}";
+                    TempData["ErrorMessage"] = $"An error occurred while updating user: {ex.Message}";
                     return View("_Error");
                 }
             }
@@ -458,14 +461,22 @@ namespace UserManagement.Web.Controllers
         [CustomAuthorize(Roles = "Administrator")]
         public ActionResult Delete(int id)
         {
-            UserLogin userLogin = uow.UserLoginRepository.GetUserById(id);
-
-            if (userLogin == null)
+            try
             {
-                return HttpNotFound();
-            }
+                UserLogin userLogin = uow.UserLoginRepository.GetUserById(id);
 
-            return View(userLogin);
+                if (userLogin == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(userLogin);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
+            }
         }
 
         [HttpPost]

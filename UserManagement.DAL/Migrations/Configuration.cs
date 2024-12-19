@@ -17,8 +17,8 @@
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
-            // RoleType serve como chave para verificar a existência do registo na DB -> pode ser adicionado ou atualizado
-            // O método AddOrUpdate espera uma sequência de parâmetros individuais ou um array, conforme indicado pelo uso do parâmetro params na definição do método
+
+            // Dados iniciais para a aplicação
             context.UserRoles.AddOrUpdate(
                 us => us.RoleType, StartUpData.GetUserRoles().ToArray());
             context.SaveChanges();

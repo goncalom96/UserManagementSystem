@@ -32,9 +32,6 @@
     </div>
     <br />
     <div class="row">
-        @* Using: É um bloco que usará um objeto que implementa IDisposable. No caso de formulários HTML em ASP.NET MVC, isso é usado para criar e fechar automaticamente um formulário HTML.*@
-        @* Html.BeginForm: Esse método gera o código HTML para iniciar um formulário.*@
-        @* FormMethod.Post: Especifica que o formulário será enviado usando o método HTTP POST. A alternativa seria FormMethod.Get.*@
         @using (Html.BeginForm("Login", "UserLogins", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -51,7 +48,6 @@
                 @Html.LabelFor(m => m.Password, new { @class = "form-label col-md-2" })
                 <div class="col-md-10">
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
-                    @*@Html.TextBoxFor(m => m.Password, new { @class = "form-control", type = "password" }) Também se pode meter assim*@
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
                 </div>
             </div>

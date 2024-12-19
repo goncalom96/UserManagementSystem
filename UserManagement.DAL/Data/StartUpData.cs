@@ -9,7 +9,6 @@ namespace UserManagement.DAL.Data
     {
         public static List<UserRole> GetUserRoles()
         {
-            //return new List<UserRole> // também outra forma de retorna a lista
             List<UserRole> roles = new List<UserRole>()
             {
                 new UserRole() { RoleType = UserRole.EnumRole.Administrator },

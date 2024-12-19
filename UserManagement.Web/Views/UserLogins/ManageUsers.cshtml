@@ -99,10 +99,10 @@
                                         <td>@Html.Raw(user.IsActived ? "&#9989;" : "&#10060;")</td>
                                         <td>
                                             @*<button class="btnDetails btn btn-outline-dark" type="button" data-id="@user.UserLoginId">
-                                                <span>
-                                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                                </span>
-                                            </button>*@
+                                                    <span>
+                                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                                    </span>
+                                                </button>*@
                                             <button class="btnUpdate btn btn-secondary" type="button" data-id="@user.UserLoginId">Edit</button>
                                             <button class="btnDelete btn btn-danger" type="button" data-id="@user.UserLoginId">Delete</button>
                                         </td>
@@ -129,20 +129,19 @@
 
     <script>
 
+        // Exibe o modal
         function openModal() {
-            // Inicializa o modal de forma clara
             var modalElement = document.getElementById('modal');
             var modal = new bootstrap.Modal(modalElement);
 
-            // Exibe o modal
             modal.show();
         }
 
+        // Fecha o modal
         function closeModal() {
             var modalElement = document.getElementById('modal');
-            var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement); // Pega ou cria a instância existente
+            var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
 
-            // Fecha o modal
             modalInstance.hide();
         }
 
@@ -152,7 +151,8 @@
                 url: "/UserLogins/Create",
                 type: "GET",
                 success: function (data) {
-                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+                    // Carrega o conteúdo no modal
+                    $("#modal .modal-content").html(data);
                     openModal();
                 },
                 error: function () {
@@ -237,7 +237,8 @@
                 success: function (response) {
                     if (response.success) {
                         closeModal();
-                        location.reload(); // Recarrega a página fora do modal
+                        // Recarrega a página fora do modal
+                        location.reload();
                     } else {
                         $("#modal .modal-content").html(response);
                     }

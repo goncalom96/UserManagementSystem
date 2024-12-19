@@ -18,17 +18,17 @@ namespace UserManagement.Web.Controllers
             }
         }
 
-        public ActionResult About()
-        {
-            try
-            {
-                return View();
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Failed to access the About Page: {ex.Message}";
-                return View("_Error");
-            }
-        }
+        //public ActionResult About()
+        //{
+        //    try
+        //    {
+        //        return View();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        TempData["ErrorMessage"] = $"Failed to access the About Page: {ex.Message}";
+        //        return View("_Error");
+        //    }
+        //}
     }
 }

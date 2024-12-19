@@ -41,7 +41,6 @@
     <br />
 
     <div>
-        @*enctype = "multipart/form-data": Este é o atributo mais importante para o upload de arquivos, pois permite que os dados do formulário sejam enviados corretamente, incluindo arquivos.*@
         @using (Html.BeginForm("Create", "UserProfiles", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()

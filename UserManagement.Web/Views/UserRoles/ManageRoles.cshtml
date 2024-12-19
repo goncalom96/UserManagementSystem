@@ -125,20 +125,19 @@
 @section Scripts {
 
     <script>
-
+        // Exibe o modal
         function openModal() {
-            // Inicializa o modal de forma clara
             var modalElement = document.getElementById('modal');
             var modal = new bootstrap.Modal(modalElement);
 
-            // Exibe o modal
             modal.show();
         }
 
+        // Fecha o modal
         function closeModal() {
             var modalElement = document.getElementById('modal');
-            var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement); // Pega ou cria a instância existente
-            modalInstance.hide(); // Fecha o modal
+            var modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modalInstance.hide();
         }
 
         // CREATE - Abrir o modal para criar um Role
@@ -147,7 +146,8 @@
                 url: "/UserRoles/Create",
                 type: "GET",
                 success: function (data) {
-                    $("#modal .modal-content").html(data);  // Carrega o conteúdo no modal
+                    // Carrega o conteúdo no modal
+                    $("#modal .modal-content").html(data);
                     openModal();
                 },
                 error: function () {
@@ -179,7 +179,7 @@
             });
         });
 
-        // DELETE - Abrir o modal para editar um Role
+        // DELETE - Abrir o modal para eliminar um Role
         $(document).on('click', '.btnDelete', function () {
 
             var roleId = $(this).attr("data-id");
@@ -210,7 +210,9 @@
                 success: function (response) {
                     if (response.success) {
                         closeModal();
-                        location.reload(); // Recarrega a página fora do modal
+
+                        // Recarrega a página fora do modal
+                        location.reload();
                     } else {
                         $("#modal .modal-content").html(response);
                     }

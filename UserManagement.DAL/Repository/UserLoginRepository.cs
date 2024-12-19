@@ -42,10 +42,6 @@ namespace UserManagement.DAL.Repository
             return userFound != null ? userFound : null;
         }
 
-        /// <summary>
-        /// Get all userLogins data, include role and profile
-        /// </summary>
-        /// <returns>IQueryable<UserLogin> userLogins</returns>
         public IQueryable<UserLogin> GetUsers()
         {
             // NOTA: Usar o Include só quando se tem a certeza que se vai utilizar as outras entidades na view para melhorar o desempenho
@@ -90,10 +86,6 @@ namespace UserManagement.DAL.Repository
             #endregion Outras alternativas
         }
 
-        /// <summary>
-        /// Get all userLogins data, include role and profile
-        /// </summary>
-        /// <returns>IEnumerable<UserLogin> userLogins</returns>
         //public IEnumerable<UserLogin> GetUsers2(Expression<Func<UserLogin, bool>> predicate = null)
         //{
         //    if (predicate != null)

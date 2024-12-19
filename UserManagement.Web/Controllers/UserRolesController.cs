@@ -27,7 +27,7 @@ namespace UserManagement.Web.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"An error occurred while retrieving roles: {ex.Message}";
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
                 return View("_Error");
             }
         }
@@ -78,14 +78,22 @@ namespace UserManagement.Web.Controllers
         [HttpGet]
         public ActionResult Update(int id)
         {
-            UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
-
-            if (userRole == null)
+            try
             {
-                return HttpNotFound();
-            }
+                UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
 
-            return View(userRole);
+                if (userRole == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(userRole);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
+            }
         }
 
         [HttpPost]
@@ -113,7 +121,7 @@ namespace UserManagement.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    TempData["ErrorMessage"] = $"An error occurred while editing the role: {ex.Message}";
+                    TempData["ErrorMessage"] = $"An error occurred while updating the role: {ex.Message}";
                     return View("_Error");
                 }
             }
@@ -124,14 +132,22 @@ namespace UserManagement.Web.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
-
-            if (userRole == null)
+            try
             {
-                return HttpNotFound();
-            }
+                UserRole userRole = uow.UserRoleRepository.GetRoleById(id);
 
-            return View(userRole);
+                if (userRole == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(userRole);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"There was an error loading the data: {ex.Message}";
+                return View("_Error");
+            }
         }
 
         [HttpPost]

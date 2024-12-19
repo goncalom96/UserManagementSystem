@@ -24,9 +24,9 @@
             </div>
 
             <div class="form-group">
-                @Html.Label("Role", new { @class = "form-label col-md-3" })
+                <label class="form-label col-md-3" for="UserRoleId">Role</label>
                 <div class="col-md-10">
-                    @Html.DropDownListFor(m => m.UserRoleId, (SelectList)ViewBag.Roles, new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.UserRoleId, (IEnumerable<SelectListItem>)ViewBag.Roles, new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.UserRoleId, "", new { @class = "text-danger small" })
                 </div>
             </div>
